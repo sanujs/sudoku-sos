@@ -1,0 +1,10 @@
+[package]
+name = "sudoku-sos"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.3.1"
+actix-cors = "0.6.4"
+sudoku-sos-solver = {path = "sudoku-sos-solver"}
+serde = { version = "1.0.164", features = ["derive"] }

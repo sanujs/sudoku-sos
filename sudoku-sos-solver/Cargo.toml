@@ -1,5 +1,5 @@
 [package]
-name = "sudoku-sos-server"
+name = "sudoku-sos-solver"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,6 +7,4 @@ edition = "2021"
 
 [dependencies]
 arrayvec = "0.7.2"
-actix-web = "4"
-actix-cors = "0.6.4"
-serde = { version = "1.0", features = ["derive"] }
+serde = { version = "1.0.164", features = ["derive"] }

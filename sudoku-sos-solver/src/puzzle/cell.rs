@@ -3,14 +3,15 @@ use std::collections::HashMap;
 
 use serde::Serialize;
 
-#[derive(Debug, Serialize)]
+
+#[derive(Debug)]
 pub struct Cell {
     pub value: u8,
     pub eliminations: HashMap<u8, Elimination>,
     pub index: (usize, usize),
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug)]
 pub struct Elimination {
     pub value: u8,
     pub eliminators: Vec<(usize, usize)>,

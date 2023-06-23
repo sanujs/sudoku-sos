@@ -4,19 +4,31 @@ use self::puzzle::{
     cell::{Elimination, EliminationAlgorithm},
     House, Puzzle, SolveAlgorithm, Step,
 };
+use serde::Serialize;
+mod puzzle;
 
-pub mod puzzle;
+#[derive(Serialize)]
+pub struct SolveOutput {
+    grid: [[u8; 9]; 9],
+    steps: Vec<Step>,
+    solve: bool,
+}
 
-pub fn solve_puzzle(puzzle: &mut Puzzle) -> Result<u32, &str> {
+pub fn solve_puzzle(grid: [[u8; 9]; 9]) -> Result<SolveOutput, SolveOutput> {
+    let mut puzzle = Puzzle::new(grid);
     println!("{:?}", puzzle);
     let mut fill_count = 0;
     println!("Empties: {}", puzzle.empty_count);
     loop {
         if fill_count == puzzle.empty_count {
             println!("Done!");
-            return Ok(fill_count);
+            return Ok(SolveOutput{
+                grid: puzzle.grid.map(|row| row.map(|cell| cell.value)),
+                steps: puzzle.steps,
+                solve: true,
+            });
         }
-        let (mut tmp_elim, mut tmp_fill) = unique_candidate(puzzle);
+        let (mut tmp_elim, mut tmp_fill) = unique_candidate(&mut puzzle);
         fill_count += tmp_fill;
         println!("UNIQUE CANDIDATE");
         println!("Filled: {}", tmp_fill);
@@ -26,7 +38,7 @@ pub fn solve_puzzle(puzzle: &mut Puzzle) -> Result<u32, &str> {
         if tmp_elim > 0 || tmp_fill > 0 {
             continue;
         }
-        (tmp_elim, tmp_fill) = sole_candidate(puzzle);
+        (tmp_elim, tmp_fill) = sole_candidate(&mut puzzle);
         fill_count += tmp_fill;
         println!("SOLE CANDIDATE");
         println!("Filled: {}", tmp_fill);
@@ -36,13 +48,17 @@ pub fn solve_puzzle(puzzle: &mut Puzzle) -> Result<u32, &str> {
         if tmp_elim > 0 || tmp_fill > 0 {
             continue;
         }
-        tmp_elim = naked_set(puzzle);
+        tmp_elim = naked_set(&mut puzzle);
         println!("NAKED SET");
         println!("Eliminated: {}", tmp_elim);
         println!("{:?}", puzzle);
 
         if tmp_elim == 0 {
-            return Err("Unable to solve...");
+            return Err(SolveOutput{
+                grid: puzzle.grid.map(|row| row.map(|cell| cell.value)),
+                steps: puzzle.steps,
+                solve: false,
+            });
         }
     }
 }
