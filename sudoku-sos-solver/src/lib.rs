@@ -11,7 +11,7 @@ mod puzzle;
 pub struct SolveOutput {
     grid: [[u8; 9]; 9],
     steps: Vec<Step>,
-    solve: bool,
+    solved: bool,
 }
 
 pub fn solve_puzzle(grid: [[u8; 9]; 9]) -> Result<SolveOutput, SolveOutput> {
@@ -22,10 +22,10 @@ pub fn solve_puzzle(grid: [[u8; 9]; 9]) -> Result<SolveOutput, SolveOutput> {
     loop {
         if fill_count == puzzle.empty_count {
             println!("Done!");
-            return Ok(SolveOutput{
+            return Ok(SolveOutput {
                 grid: puzzle.grid.map(|row| row.map(|cell| cell.value)),
                 steps: puzzle.steps,
-                solve: true,
+                solved: true,
             });
         }
         let (mut tmp_elim, mut tmp_fill) = unique_candidate(&mut puzzle);
@@ -54,10 +54,10 @@ pub fn solve_puzzle(grid: [[u8; 9]; 9]) -> Result<SolveOutput, SolveOutput> {
         println!("{:?}", puzzle);
 
         if tmp_elim == 0 {
-            return Err(SolveOutput{
+            return Err(SolveOutput {
                 grid: puzzle.grid.map(|row| row.map(|cell| cell.value)),
                 steps: puzzle.steps,
-                solve: false,
+                solved: false,
             });
         }
     }
@@ -143,20 +143,15 @@ fn sole_candidate(puzzle: &mut Puzzle) -> (u32, u32) {
 
 fn naked_set(puzzle: &mut Puzzle) -> u32 {
     let mut removed = 0;
-    let unfilled_cells = puzzle.get_unfilled_indices();
-    for cell in unfilled_cells {
-        let candidates: BTreeSet<u8> = puzzle.grid[cell.0][cell.1]
-            .get_candidates()
-            .iter()
-            .cloned()
-            .collect();
+    let mut cell: (usize, usize) = (0, 0);
+    for _ in 0..9 {
         let houses = [House::Block, House::Row, House::Column];
 
         for house in houses.iter() {
             let mut state: BTreeMap<BTreeSet<u8>, Vec<(usize, usize)>> = BTreeMap::new();
-            state.insert(candidates.clone(), vec![(cell.0, cell.1)]);
             // Creates an iterable cell's row, column, and candidates
-            let house_iter: Vec<(usize, usize, BTreeSet<u8>)> = puzzle.get_house_indices_with_candidates(cell.0, cell.1, vec![house]);
+            let house_iter: Vec<(usize, usize, BTreeSet<u8>)> =
+                puzzle.get_house_indices_with_candidates(cell.0, cell.1, vec![house]);
             for (row, col, set) in house_iter.iter() {
                 // Maps every union of every set of candidates -> cells with a set of candidates that is a subset of the key
                 let mut next_state = state.clone();
@@ -222,6 +217,12 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                 }
             }
         }
+        // Method to have each iteration use a cell in a unique row, column, and box
+        cell = if cell.1 > 4 {
+            (cell.0 + 1, cell.1 - 5)
+        } else {
+            (cell.0 + 1, cell.1 + 4)
+        };
     }
     removed
 }

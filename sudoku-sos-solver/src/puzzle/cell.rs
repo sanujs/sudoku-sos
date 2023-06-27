@@ -3,7 +3,6 @@ use std::collections::HashMap;
 
 use serde::Serialize;
 
-
 #[derive(Debug)]
 pub struct Cell {
     pub value: u8,
