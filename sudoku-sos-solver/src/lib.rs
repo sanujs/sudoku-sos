@@ -80,7 +80,8 @@ fn unique_candidate(puzzle: &mut Puzzle) -> (u32, u32) {
                     .get_house_indices(cell.0, cell.1, vec![&h])
                     .iter()
                     .filter(|other_cell| {
-                        puzzle.grid[other_cell.0][other_cell.1].contains_candidate(&c)
+                        **other_cell != cell
+                            && puzzle.grid[other_cell.0][other_cell.1].contains_candidate(&c)
                     })
                     .count()
                     == 0

@@ -149,8 +149,8 @@ impl Puzzle {
         for house in houses {
             match house {
                 House::Block => indices.append(&mut self.get_block_indices(row, col)),
-                House::Row => indices.append(&mut self.get_row_indices(row, col)),
-                House::Column => indices.append(&mut self.get_column_indices(row, col)),
+                House::Row => indices.append(&mut self.get_row_indices(row)),
+                House::Column => indices.append(&mut self.get_column_indices(col)),
             }
         }
         indices
@@ -172,10 +172,8 @@ impl Puzzle {
                 House::Block => {
                     indices.append(&mut self.get_block_indices_with_candidates(row, col))
                 }
-                House::Row => indices.append(&mut self.get_row_indices_with_candidates(row, col)),
-                House::Column => {
-                    indices.append(&mut self.get_column_indices_with_candidates(row, col))
-                }
+                House::Row => indices.append(&mut self.get_row_indices_with_candidates(row)),
+                House::Column => indices.append(&mut self.get_column_indices_with_candidates(col)),
             }
         }
         indices
@@ -185,9 +183,7 @@ impl Puzzle {
         let mut indices = vec![];
         for i in 0..9 {
             let next_index = (3 * (row / 3) + i / 3, 3 * (col / 3) + (i - (i / 3) * 3));
-            if row == next_index.0 && col == next_index.1
-                || self.grid[next_index.0][next_index.1].value > 0
-            {
+            if self.grid[next_index.0][next_index.1].value > 0 {
                 continue;
             }
             indices.push(next_index);
@@ -220,10 +216,10 @@ impl Puzzle {
         indices
     }
 
-    fn get_row_indices(&self, row: usize, col: usize) -> Vec<(usize, usize)> {
+    fn get_row_indices(&self, row: usize) -> Vec<(usize, usize)> {
         let mut indices = vec![];
         for i in 0..9 {
-            if i == col || self.grid[row][i].value > 0 {
+            if self.grid[row][i].value > 0 {
                 continue;
             }
             indices.push((row, i));
@@ -231,11 +227,7 @@ impl Puzzle {
         indices
     }
 
-    fn get_row_indices_with_candidates(
-        &self,
-        row: usize,
-        col: usize,
-    ) -> Vec<(usize, usize, BTreeSet<u8>)> {
+    fn get_row_indices_with_candidates(&self, row: usize) -> Vec<(usize, usize, BTreeSet<u8>)> {
         let mut indices = vec![];
         for i in 0..9 {
             if self.grid[row][i].value > 0 {
@@ -255,10 +247,10 @@ impl Puzzle {
         indices
     }
 
-    fn get_column_indices(&self, row: usize, col: usize) -> Vec<(usize, usize)> {
+    fn get_column_indices(&self, col: usize) -> Vec<(usize, usize)> {
         let mut indices = vec![];
         for i in 0..9 {
-            if i == row || self.grid[i][col].value > 0 {
+            if self.grid[i][col].value > 0 {
                 continue;
             }
             indices.push((i, col));
@@ -266,11 +258,7 @@ impl Puzzle {
         indices
     }
 
-    fn get_column_indices_with_candidates(
-        &self,
-        row: usize,
-        col: usize,
-    ) -> Vec<(usize, usize, BTreeSet<u8>)> {
+    fn get_column_indices_with_candidates(&self, col: usize) -> Vec<(usize, usize, BTreeSet<u8>)> {
         let mut indices = vec![];
         for i in 0..9 {
             if self.grid[i][col].value > 0 {
