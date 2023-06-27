@@ -1,7 +1,7 @@
 pub mod cell;
 use arrayvec::ArrayVec;
 use serde::Serialize;
-use std::{collections::HashMap, fmt, vec};
+use std::{collections::{HashMap, BTreeSet}, fmt, vec};
 
 use self::cell::{Cell, Elimination, EliminationAlgorithm};
 
@@ -153,6 +153,27 @@ impl Puzzle {
         indices
     }
 
+    /*
+    Returns the indexes of the unfilled cells within the houses specified
+    along with a BTreeSet of candidates
+    */
+    pub fn get_house_indices_with_candidates(
+        &self,
+        row: usize,
+        col: usize,
+        houses: Vec<&House>,
+    ) -> Vec<(usize, usize, BTreeSet<u8>)> {
+        let mut indices = vec![];
+        for house in houses {
+            match house {
+                House::Block => indices.append(&mut self.get_block_indices_with_candidates(row, col)),
+                House::Row => indices.append(&mut self.get_row_indices_with_candidates(row, col)),
+                House::Column => indices.append(&mut self.get_column_indices_with_candidates(row, col)),
+            }
+        }
+        indices
+    }
+
     fn get_block_indices(&self, row: usize, col: usize) -> Vec<(usize, usize)> {
         let mut indices = vec![];
         for i in 0..9 {
@@ -163,6 +184,21 @@ impl Puzzle {
                 continue;
             }
             indices.push(next_index);
+        }
+        indices
+    }
+
+    fn get_block_indices_with_candidates(&self, row: usize, col: usize) -> Vec<(usize, usize, BTreeSet<u8>)> {
+        let mut indices = vec![];
+        for i in 0..9 {
+            let next_index = (3 * (row / 3) + i / 3, 3 * (col / 3) + (i - (i / 3) * 3));
+            if row == next_index.0 && col == next_index.1
+                || self.grid[next_index.0][next_index.1].value > 0
+            {
+                continue;
+            }
+            let next_element = (next_index.0, next_index.1, self.grid[next_index.0][next_index.1].get_candidates().iter().cloned().collect::<BTreeSet<u8>>());
+            indices.push(next_element);
         }
         indices
     }
@@ -178,6 +214,18 @@ impl Puzzle {
         indices
     }
 
+    fn get_row_indices_with_candidates(&self, row: usize, col: usize) -> Vec<(usize, usize, BTreeSet<u8>)> {
+        let mut indices = vec![];
+        for i in 0..9 {
+            if i == col || self.grid[row][i].value > 0 {
+                continue;
+            }
+            let next_element = (row, i, self.grid[row][i].get_candidates().iter().cloned().collect::<BTreeSet<u8>>());
+            indices.push(next_element);
+        }
+        indices
+    }
+
     fn get_column_indices(&self, row: usize, col: usize) -> Vec<(usize, usize)> {
         let mut indices = vec![];
         for i in 0..9 {
@@ -185,6 +233,18 @@ impl Puzzle {
                 continue;
             }
             indices.push((i, col));
+        }
+        indices
+    }
+
+    fn get_column_indices_with_candidates(&self, row: usize, col: usize) -> Vec<(usize, usize, BTreeSet<u8>)> {
+        let mut indices = vec![];
+        for i in 0..9 {
+            if i == row || self.grid[i][col].value > 0 {
+                continue;
+            }
+            let next_element = (i, col, self.grid[i][col].get_candidates().iter().cloned().collect::<BTreeSet<u8>>());
+            indices.push(next_element);
         }
         indices
     }

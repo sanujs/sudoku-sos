@@ -155,22 +155,8 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
         for house in houses.iter() {
             let mut state: BTreeMap<BTreeSet<u8>, Vec<(usize, usize)>> = BTreeMap::new();
             state.insert(candidates.clone(), vec![(cell.0, cell.1)]);
-            let house_indices = puzzle.get_house_indices(cell.0, cell.1, vec![house]);
             // Creates an iterable cell's row, column, and candidates
-            let house_iter: Vec<(usize, usize, BTreeSet<u8>)> = house_indices
-                .iter()
-                .map(|house_cell| {
-                    (
-                        house_cell.0,
-                        house_cell.1,
-                        puzzle.grid[house_cell.0][house_cell.1]
-                            .get_candidates()
-                            .iter()
-                            .cloned()
-                            .collect::<BTreeSet<u8>>(),
-                    )
-                })
-                .collect();
+            let house_iter: Vec<(usize, usize, BTreeSet<u8>)> = puzzle.get_house_indices_with_candidates(cell.0, cell.1, vec![house]);
             for (row, col, set) in house_iter.iter() {
                 // Maps every union of every set of candidates -> cells with a set of candidates that is a subset of the key
                 let mut next_state = state.clone();
@@ -195,7 +181,7 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
 
             for key in state.keys() {
                 if let Some(value) = state.get(key) {
-                    if value.len() > house_indices.len() {
+                    if value.len() > house_iter.len() {
                         // Number of candidates is greater than the number of unfilled cells in the house
                         continue;
                     }
