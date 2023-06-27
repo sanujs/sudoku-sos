@@ -25,6 +25,7 @@ pub enum Step {
     },
     Solve {
         index: (usize, usize),
+        value: u8,
         algorithm: SolveAlgorithm,
     },
 }
@@ -107,6 +108,7 @@ impl Puzzle {
             Some(_) => {
                 self.steps.push(Step::Solve {
                     index: (row, col),
+                    value,
                     algorithm,
                 });
                 Some(self.post_fill_eliminations(row, col))

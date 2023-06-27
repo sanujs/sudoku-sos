@@ -199,7 +199,7 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                                         .is_some()
                                     {
                                         removed += 1;
-                                        victims.push((*row, *col));
+                                        if !victims.contains(&(*row, *col)) { victims.push((*row, *col)) };
                                     }
                                 }
                             }
@@ -217,6 +217,9 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                     }
                 }
             }
+        }
+        if removed > 0 {
+            return removed;
         }
         // Method to have each iteration use a cell in a unique row, column, and box
         cell = if cell.1 > 4 {
