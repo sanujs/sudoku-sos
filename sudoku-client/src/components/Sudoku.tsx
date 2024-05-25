@@ -9,23 +9,24 @@ type ResponseData = {
   steps: Step[],
 }
 
-type Step = {
-  Solve?: Solve,
-  Elimination?: Elimination,
-}
+type Step = Solve | Elimination
 
 type Solve = {
-  index: number[][],
-  value: number,
-  algorithm: string,
+  Solve: {
+    index: number[],
+    value: number,
+    algorithm: string,
+  }
 }
 
 type Elimination = {
-  value: number,
-  eliminators: number[][],
-  steps_index: number,
-  victims: number[][],
-  algorithm: string,
+  Elimination: {
+    value: number,
+    eliminators: number[][],
+    steps_index: number,
+    victims: number[][],
+    algorithm: string,
+  }
 }
 
 const Sudoku = () => {
@@ -154,21 +155,25 @@ const Sudoku = () => {
       solveOrderIndex < solveOrder.length - 1
     ) {
       let newSolveOrderIndex = solveOrderIndex + 1;
-      let orderedElement = solveOrder[newSolveOrderIndex];
+      let orderedElement: Step = solveOrder[newSolveOrderIndex];
       const newReductionList = [];
-      while (Object.keys(orderedElement)[0] === "Elimination") {
+      while ("Elimination" in orderedElement) {
         newReductionList.push(orderedElement["Elimination"]);
         orderedElement = solveOrder[++newSolveOrderIndex];
       }
       // setCurrentReductions([...newReductionList]);
-      const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
-      const newGridState = [...gridState];
-      newGridState[solvedCellIndex] = {
-        ...gridState[solvedCellIndex],
-        sudokuState: gridState[solvedCellIndex].sudokuSolution,
-      };
-      setGridState(newGridState);
-      setSolveOrderIndex(newSolveOrderIndex);
+      if ("Solve" in orderedElement) {
+        const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
+        const newGridState = [...gridState];
+        newGridState[solvedCellIndex] = {
+          ...gridState[solvedCellIndex],
+          sudokuState: gridState[solvedCellIndex].sudokuSolution,
+        };
+        setGridState(newGridState);
+        setSolveOrderIndex(newSolveOrderIndex);
+      } else {
+        console.log("Something went wrong");
+      }
     }
   }
 
