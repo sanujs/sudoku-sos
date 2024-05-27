@@ -55,13 +55,6 @@ const Cell = (props: CellProps) => {
         disabled={props.submitted}
         readOnly={props.submitted}
         onChange={(e) => props.onCellChange(i, e.target.value)}
-        onKeyPress={(event) => {
-          if (!/[1-9]/.test(event.key)) {
-            event.preventDefault();
-          } else if (!props.submitted) {
-            props.deleteCell(i);
-          }
-        }}
         onKeyDown={(event) => {
           switch (event.key) {
             case "Down":
@@ -114,6 +107,11 @@ const Cell = (props: CellProps) => {
               }
               break;
             default:
+              if (!/[1-9]/.test(event.key)) {
+                event.preventDefault();
+              } else if (!props.submitted) {
+                props.deleteCell(i);
+              }
               break;
           }
         }}
