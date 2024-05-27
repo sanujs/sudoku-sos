@@ -187,7 +187,11 @@ const Sudoku = () => {
     ) {
       return false;
     }
-    return i === twoToOneIndex(solveOrder[solveOrderIndex]["Solve"]["index"]);
+    const solveStep: Step = solveOrder[solveOrderIndex];
+    if ("Solve" in solveStep) {
+      return i === twoToOneIndex(solveStep["Solve"]["index"]);
+    }
+    return false;
   }
 
   function getCandidates(i: number) {
