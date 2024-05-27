@@ -5,13 +5,13 @@ import { CellState } from "./Sudoku";
 
 type PuzzleProps = {
   gridState: CellState[],
-  onCellChange: (i: number, newVal: number) => void,
+  onCellChange: (i: number, newVal: string) => void,
   deleteCell: (i: number) => void,
   handleSubmit: () => void,
   submitted: boolean,
-  isErroredCell: (i: number) => void,
-  isNewestHintCell: (i: number) => void,
-  getCandidates: (i: number) => void,
+  isErroredCell: (i: number) => boolean,
+  isNewestHintCell: (i: number) => boolean,
+  getCandidates: (i: number) => object,
 }
 const Puzzle = (props: PuzzleProps) => {
   function changeFocus(i: number) {
@@ -21,7 +21,7 @@ const Puzzle = (props: PuzzleProps) => {
     }
   }
 
-  function onCellChange(i: number, newVal: number) {
+  function onCellChange(i: number, newVal: string) {
     props.onCellChange(i, newVal);
     if (i<80) {
       changeFocus(i+1);

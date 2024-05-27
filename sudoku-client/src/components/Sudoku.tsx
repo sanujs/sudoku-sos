@@ -116,11 +116,11 @@ const Sudoku = () => {
     return false;
   }
 
-  function onCellChange(i: number, newVal: number) {
+  function onCellChange(i: number, newVal: string) {
     const newGridState = [...gridState];
     newGridState[i] = {
       ...gridState[i],
-      sudokuState: newVal.toString(),
+      sudokuState: newVal,
     };
     setGridState(newGridState);
   }

@@ -1,6 +1,22 @@
 import { AspectRatio } from "@mui/joy";
+import { MutableRefObject } from "react";
 
-const Cell = (props) => {
+type CellProps = {
+  index: number,
+  key: number,
+  value: string,
+  onCellChange: (i: number, newVal: string) => void,
+  deleteCell: (i: number) => void,
+  changeFocus: (i: number) => void,
+  handleSubmit: () => void,
+  cellRef: MutableRefObject<HTMLInputElement|null>,
+  submitted: boolean,
+  error: boolean,
+  next: boolean,
+  candidates: object,
+}
+
+const Cell = (props: CellProps) => {
   const i = props.index;
   const thickLocations = [2, 5, 8];
   const className = [];
@@ -36,7 +52,7 @@ const Cell = (props) => {
         className={className.join(" ")}
         id={i.toString()}
         value={props.value}
-        disabled={props.submitted && !props.related}
+        disabled={props.submitted}
         readOnly={props.submitted}
         onChange={(e) => props.onCellChange(i, e.target.value)}
         onKeyPress={(event) => {
@@ -95,7 +111,6 @@ const Cell = (props) => {
               event.preventDefault();
               if (props.value !== "") {
                 props.deleteCell(i);
-                props.cleanupErrors(i);
               }
               break;
             default:
