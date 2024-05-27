@@ -1,19 +1,34 @@
 import Cell from "./Cell";
-import { createRef, useRef } from "react";
+import { MutableRefObject, createRef, useRef } from "react";
 import { Grid } from "@mui/material";
-const Puzzle = (props) => {
-  function changeFocus(i) {
-    cellRefs.current[i].current.firstChild.firstChild.focus();
+import { CellState } from "./Sudoku";
+
+type PuzzleProps = {
+  gridState: CellState[],
+  onCellChange: (i: number, newVal: number) => void,
+  deleteCell: (i: number) => void,
+  handleSubmit: () => void,
+  submitted: boolean,
+  isErroredCell: (i: number) => void,
+  isNewestHintCell: (i: number) => void,
+  getCandidates: (i: number) => void,
+}
+const Puzzle = (props: PuzzleProps) => {
+  function changeFocus(i: number) {
+    if (cellRefs.current[i].current) {
+      cellRefs.current[i].current.focus();
+
+    }
   }
 
-  function onCellChange(i, newVal) {
+  function onCellChange(i: number, newVal: number) {
     props.onCellChange(i, newVal);
     if (i<80) {
       changeFocus(i+1);
     }
   }
   const sudoku_grid = [];
-  const cellRefs = useRef([]);
+  const cellRefs: MutableRefObject<MutableRefObject<HTMLInputElement|null>[]> = useRef([]);
   for (let i = 0; i < 81; i++) {
     cellRefs.current[i] = createRef();
     sudoku_grid.push(
@@ -29,7 +44,6 @@ const Puzzle = (props) => {
         submitted={props.submitted}
         error={props.isErroredCell(i)}
         next={props.isNewestHintCell(i)}
-        setClickedCell={props.setClickedCell}
         candidates={props.getCandidates(i)}
       />
     );

@@ -30,8 +30,9 @@ const Cell = (props) => {
     }
   }
   return (
-    <AspectRatio ratio="1/1" ref={props.cellRef}>
+    <AspectRatio ratio="1/1">
       <input
+        ref={props.cellRef}
         className={className.join(" ")}
         id={i.toString()}
         value={props.value}
@@ -99,11 +100,6 @@ const Cell = (props) => {
               break;
             default:
               break;
-          }
-        }}
-        onClick={() => {
-          if (props.submitted) {
-            props.setClickedCell(i);
           }
         }}
       />
