@@ -258,7 +258,7 @@ const Sudoku = () => {
         maxWidth: "95vw",
       }}
     >
-      <Grid className="puzzle-list-column">
+      <Grid className="sudoku-columns">
         <Puzzle
           gridState={gridState}
           onCellChange={onCellChange}

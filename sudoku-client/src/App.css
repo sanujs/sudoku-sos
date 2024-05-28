@@ -1,36 +1,6 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-.flex-container {
-  display: flex;
-  align-items: center;
+.sudoku-columns {
+  display: grid;
+  grid-template-columns: 70% 30%;
 }
 
 .puzzle-grid {
@@ -40,67 +10,89 @@
   min-width: 550px;
 }
 
-.puzzle-list-column {
-  display: grid;
-  grid-template-columns: 70% 30%;
-}
+/* || Cell component styles */
 
-input {
+input.cell{
   text-align: center;
   font-size: 4vw;
   font-family: Arial, Helvetica, sans-serif;
-  caret-color: transparent;
+  caret-color: transparent; /* Hides blinking cursor in cell*/
 }
 
-input:focus {
+input:focus.cell{
   outline: none;
-  background-color: lightcyan;
 }
 
+@media (prefers-color-scheme: light) {
+  input:focus.cell{
+    background-color: lightcyan;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  input:focus.cell{
+    background-color: darkslategrey;
+  }
+}
+
+/* Cell borders */
 .thick-right {
   border-right: 3px solid black;
 }
-
 .thick-left {
   border-left: 3px solid black;
 }
-
 .thick-top {
   border-top: 3px solid black;
 }
-
 .thick-bottom {
   border-bottom: 3px solid black;
 }
-
 .thin-right {
   border-right: 1px solid black;
 }
-
 .thin-left {
   border-left: transparent;
 }
-
 .thin-top {
   border-top: transparent;
 }
-
 .thin-bottom {
   border-bottom: 1px solid black;
 }
 
-.error  {
-  background-color: #fdd;
-  color: red;
+
+@media (prefers-color-scheme: light) {
+  .error  {
+    background-color: #fdd;
+    color: red;
+  }
+
+  .next {
+    background-color:lightgoldenrodyellow;
+  }
+
+  .related {
+    background-color: skyblue;
+  }
+
+  .reducer {
+    background-color:darkorange;
+  }
 }
 
-.next {
-  background-color:lightgoldenrodyellow;
-}
 
-.related {
-  background-color: skyblue;
+@media (prefers-color-scheme: dark) {
+  .error  {
+    background-color: rgb(87, 0, 0);
+    color: #fdd;
+  }
+
+  .next {
+    background-color:rgb(77, 57, 7);
+  }
 }
+/* || Candidates */
 
 .candidates {
   position: absolute;
@@ -109,12 +101,4 @@ input:focus {
 .removed {
   color: red;
   text-decoration: line-through;
-}
-
-.reducer {
-  background-color:darkorange;
-}
-
-.card {
-  margin: 25px;
 }
