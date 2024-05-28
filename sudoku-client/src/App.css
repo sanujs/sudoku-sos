@@ -92,10 +92,15 @@ input:focus.cell{
     background-color:rgb(77, 57, 7);
   }
 }
+
 /* || Candidates */
 
 .candidates {
-  position: absolute;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  font-size: 0.8rem;
+  text-align: center;
 }
 
 .removed {
