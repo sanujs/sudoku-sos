@@ -4,12 +4,13 @@ use self::puzzle::{
     cell::{Elimination, EliminationAlgorithm},
     House, Puzzle, SolveAlgorithm, Step,
 };
+use puzzle::cell::Cell;
 use serde::Serialize;
 mod puzzle;
 
 #[derive(Serialize)]
 pub struct SolveOutput {
-    grid: [[u8; 9]; 9],
+    grid: [[Cell; 9]; 9],
     steps: Vec<Step>,
     solved: bool,
 }
@@ -23,7 +24,7 @@ pub fn solve_puzzle(grid: [[u8; 9]; 9]) -> Result<SolveOutput, SolveOutput> {
         if fill_count == puzzle.empty_count {
             println!("Done!");
             return Ok(SolveOutput {
-                grid: puzzle.grid.map(|row| row.map(|cell| cell.value)),
+                grid: puzzle.grid,
                 steps: puzzle.steps,
                 solved: true,
             });
@@ -55,7 +56,7 @@ pub fn solve_puzzle(grid: [[u8; 9]; 9]) -> Result<SolveOutput, SolveOutput> {
 
         if tmp_elim == 0 {
             return Err(SolveOutput {
-                grid: puzzle.grid.map(|row| row.map(|cell| cell.value)),
+                grid: puzzle.grid,
                 steps: puzzle.steps,
                 solved: false,
             });

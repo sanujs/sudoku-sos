@@ -5,8 +5,21 @@ import { useEffect, useState } from "react";
 
 type ResponseData = {
   solved: boolean,
-  grid: number[][],
+  grid: GridElement[][],
   steps: Step[],
+}
+
+type GridElement = {
+  value: number,
+  index: number[],
+  eliminations: {
+    [key: number]: {
+      algorithm: string,
+      eliminators: number[][],
+      steps_index: number,
+      value: number,
+    }
+  },
 }
 
 type Step = Solve | Elimination
@@ -32,7 +45,14 @@ type Elimination = {
 export type CellState = {
   sudokuState: string,
   solvedValue: string|number,
-  reductions: never,
+  eliminations: {
+    [key: number]: {
+      algorithm: string,
+      eliminators: number[][],
+      steps_index: number,
+      value: number,
+    }
+  },
 }
 
 const Sudoku = () => {
@@ -40,7 +60,7 @@ const Sudoku = () => {
     Array(81).fill({
       sudokuState: "",
       solvedValue: 0,
-      reductions: [],
+      eliminations: [],
     })
   );
   const [submitState, setSubmitState] = useState(false);
@@ -77,16 +97,17 @@ const Sudoku = () => {
           message: "Unable to solve",
         });
       }
-      const arrayResponse = data.grid;
       setSolveOrder(data.steps);
       setSolveOrderIndex(-1);
       setGridState(
         gridState.map((item, i) => {
+          const responseItem = data.grid[Math.floor(i / 9)][i % 9];
           return {
             ...item,
-            solvedValue: !arrayResponse[Math.floor(i / 9)][i % 9]
+            solvedValue: !responseItem.value
               ? ""
-              : arrayResponse[Math.floor(i / 9)][i % 9],
+              : responseItem.value,
+            eliminations: responseItem.eliminations,
           };
         })
       );
@@ -167,7 +188,6 @@ const Sudoku = () => {
         newReductionList.push(orderedElement["Elimination"]);
         orderedElement = solveOrder[++newSolveOrderIndex];
       }
-      // setCurrentReductions([...newReductionList]);
       const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
       const newGridState = [...gridState];
       newGridState[solvedCellIndex] = {
@@ -194,8 +214,8 @@ const Sudoku = () => {
     return false;
   }
 
-  function getCandidates(i: number) {
-    const candidatesObj = {};
+  function getCandidates(i: number): string[] {
+    const candidatesObj: string[] = [];
     if (
       solveOrderIndex === null ||
       gridState[i].sudokuState ||
@@ -203,13 +223,13 @@ const Sudoku = () => {
     ) {
       return candidatesObj;
     }
-    const hintReductions = gridState[i].reductions;
+    const hintEliminations = gridState[i].eliminations;
     for (let j = 1; j < 10; j++) {
-      if (!(j in hintReductions)) {
+      if (!(j in hintEliminations)) {
         candidatesObj[j] = "candidate";
-      } else if (hintReductions[j].reduced_at > solveOrderIndex+1) {
+      } else if (hintEliminations[j].steps_index > solveOrderIndex+1) {
         candidatesObj[j] = "candidate";
-      } else if (hintReductions[j].reduced_at === solveOrderIndex+1) {
+      } else if (hintEliminations[j].steps_index === solveOrderIndex+1) {
         candidatesObj[j] = "removed";
       }
     }
@@ -226,14 +246,13 @@ const Sudoku = () => {
       Array(81).fill({
         sudokuState: "",
         solvedValue: 0,
-        reductions: [],
+        eliminations: [],
       })
     );
     setSubmitState(false);
     setSolvedAlert({ ...solvedAlert, visibility: false });
     setSolveOrder([]);
     setSolveOrderIndex(null);
-    // setCurrentReductions([]);
   }
 
   function exampleSudoku() {

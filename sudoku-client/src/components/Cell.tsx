@@ -13,7 +13,7 @@ type CellProps = {
   submitted: boolean,
   error: boolean,
   next: boolean,
-  candidates: object,
+  candidates: string[],
 }
 
 const Cell = (props: CellProps) => {

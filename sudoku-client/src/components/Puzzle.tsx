@@ -11,7 +11,7 @@ type PuzzleProps = {
   submitted: boolean,
   isErroredCell: (i: number) => boolean,
   isNewestHintCell: (i: number) => boolean,
-  getCandidates: (i: number) => object,
+  getCandidates: (i: number) => string[],
 }
 const Puzzle = (props: PuzzleProps) => {
   function changeFocus(i: number) {

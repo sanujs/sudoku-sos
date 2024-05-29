@@ -6,7 +6,7 @@
 .puzzle-grid {
   display: grid;
   margin: 25px;
-  grid-template-columns: auto auto auto auto auto auto auto auto auto;
+  grid-template-columns: repeat(9, 1fr);
   min-width: 550px;
 }
 
@@ -14,7 +14,7 @@
 
 input.cell{
   text-align: center;
-  font-size: 4vw;
+  font-size: 2.5rem;
   font-family: Arial, Helvetica, sans-serif;
   caret-color: transparent; /* Hides blinking cursor in cell*/
 }
@@ -98,7 +98,7 @@ input:focus.cell{
 .candidates {
   position: relative;
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr;
   font-size: 0.8rem;
   text-align: center;
 }
