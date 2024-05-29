@@ -1,0 +1,109 @@
+.sudoku-columns {
+  display: grid;
+  grid-template-columns: 70% 30%;
+}
+
+.puzzle-grid {
+  display: grid;
+  margin: 25px;
+  grid-template-columns: repeat(9, 1fr);
+  min-width: 550px;
+}
+
+/* || Cell component styles */
+
+input.cell{
+  text-align: center;
+  font-size: 2.5rem;
+  font-family: Arial, Helvetica, sans-serif;
+  caret-color: transparent; /* Hides blinking cursor in cell*/
+}
+
+input:focus.cell{
+  outline: none;
+}
+
+@media (prefers-color-scheme: light) {
+  input:focus.cell{
+    background-color: lightcyan;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  input:focus.cell{
+    background-color: darkslategrey;
+  }
+}
+
+/* Cell borders */
+.thick-right {
+  border-right: 3px solid black;
+}
+.thick-left {
+  border-left: 3px solid black;
+}
+.thick-top {
+  border-top: 3px solid black;
+}
+.thick-bottom {
+  border-bottom: 3px solid black;
+}
+.thin-right {
+  border-right: 1px solid black;
+}
+.thin-left {
+  border-left: transparent;
+}
+.thin-top {
+  border-top: transparent;
+}
+.thin-bottom {
+  border-bottom: 1px solid black;
+}
+
+
+@media (prefers-color-scheme: light) {
+  .error  {
+    background-color: #fdd;
+    color: red;
+  }
+
+  .next {
+    background-color:lightgoldenrodyellow;
+  }
+
+  .related {
+    background-color: skyblue;
+  }
+
+  .reducer {
+    background-color:darkorange;
+  }
+}
+
+
+@media (prefers-color-scheme: dark) {
+  .error  {
+    background-color: rgb(87, 0, 0);
+    color: #fdd;
+  }
+
+  .next {
+    background-color:rgb(77, 57, 7);
+  }
+}
+
+/* || Candidates */
+
+.candidates {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.removed {
+  color: red;
+  text-decoration: line-through;
+}
