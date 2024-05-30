@@ -10,7 +10,7 @@ type CellProps = {
   changeFocus: (i: number) => void,
   handleSubmit: () => void,
   cellRef: MutableRefObject<HTMLInputElement|null>,
-  submitted: boolean,
+  locked: boolean,
   error: boolean,
   next: boolean,
   candidates: string[],
@@ -52,8 +52,8 @@ const Cell = (props: CellProps) => {
         className={className.join(" ")}
         id={i.toString()}
         value={props.value}
-        disabled={props.submitted}
-        readOnly={props.submitted}
+        disabled={props.locked}
+        readOnly={props.locked}
         onChange={(e) => props.onCellChange(i, e.target.value)}
         onKeyDown={(event) => {
           switch (event.key) {
@@ -109,7 +109,7 @@ const Cell = (props: CellProps) => {
             default:
               if (!/[1-9]/.test(event.key)) {
                 event.preventDefault();
-              } else if (!props.submitted) {
+              } else if (!props.locked) {
                 props.deleteCell(i);
               }
               break;

@@ -313,7 +313,11 @@ impl fmt::Debug for Puzzle {
                 if col == 3 || col == 6 {
                     write!(f, "| ")?;
                 }
-                write!(f, "{} ", self.grid[row][col].value)?;
+                if self.grid[row][col].value == 0 {
+                    write!(f, "_ ")?;
+                } else {
+                    write!(f, "{} ", self.grid[row][col].value)?;
+                }
             }
             writeln!(f, "]")?;
         }

@@ -8,7 +8,6 @@ type PuzzleProps = {
   onCellChange: (i: number, newVal: string) => void,
   deleteCell: (i: number) => void,
   handleSubmit: () => void,
-  submitted: boolean,
   isErroredCell: (i: number) => boolean,
   isNewestHintCell: (i: number) => boolean,
   getCandidates: (i: number) => string[],
@@ -41,7 +40,7 @@ const Puzzle = (props: PuzzleProps) => {
         changeFocus={changeFocus}
         handleSubmit={props.handleSubmit}
         cellRef={cellRefs.current[i]}
-        submitted={props.submitted}
+        locked={props.gridState[i].locked}
         error={props.isErroredCell(i)}
         next={props.isNewestHintCell(i)}
         candidates={props.getCandidates(i)}

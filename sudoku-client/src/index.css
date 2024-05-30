@@ -32,12 +32,12 @@ body {
   }
 
   input {
-    background-color: rgb(233, 233, 233);
+    background-color: white;
     color: black;
   }
 
   input:disabled {
-    color: rgb(98, 98, 98);
+    color: #1976d2;
   }
 }
 

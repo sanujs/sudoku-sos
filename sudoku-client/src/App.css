@@ -63,7 +63,7 @@ input:focus.cell{
 
 
 @media (prefers-color-scheme: light) {
-  .error  {
+  .error {
     background-color: #fdd;
     color: red;
   }

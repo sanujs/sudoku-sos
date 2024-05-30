@@ -1,5 +1,5 @@
 import { Alert, Button, Checkbox, Container, FormControlLabel, Grid, Snackbar } from "@mui/material";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Puzzle from "./Puzzle";
 import { useEffect, useState } from "react";
 
@@ -53,6 +53,7 @@ export type CellState = {
       value: number,
     }
   },
+  locked: boolean,
 }
 
 const Sudoku = () => {
@@ -61,6 +62,7 @@ const Sudoku = () => {
       sudokuState: "",
       solvedValue: 0,
       eliminations: [],
+      locked: false,
     })
   );
   const [submitState, setSubmitState] = useState(false);
@@ -71,9 +73,10 @@ const Sudoku = () => {
   });
   const [solveOrder, setSolveOrder] = useState<Step[]>([]);
   const [solveOrderIndex, setSolveOrderIndex] = useState<number|null>(null);
-  const [showCandidates, setShowCandidates] = useState(true);
+  const [showCandidates, setShowCandidates] = useState(false);
+  const [resubmit, setResubmit] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = (): Promise<void | AxiosResponse> => {
     const grid: number[][] = [...new Array(9)].map(() => Array(9));
     for (let i = 0; i < 81; i++) {
       grid[Math.floor(i / 9)][i % 9] =
@@ -81,7 +84,7 @@ const Sudoku = () => {
     }
     
     console.log(grid);
-    axios.post("http://127.0.0.1:8080", grid).then((response) => {
+    return axios.post("http://127.0.0.1:8080", grid).then((response) => {
       console.log(response);
       const data: ResponseData = response.data;
       if (data.solved) {
@@ -99,8 +102,7 @@ const Sudoku = () => {
       }
       setSolveOrder(data.steps);
       setSolveOrderIndex(-1);
-      setGridState(
-        gridState.map((item, i) => {
+      const newGS = gridState.map((item, i) => {
           const responseItem = data.grid[Math.floor(i / 9)][i % 9];
           return {
             ...item,
@@ -108,10 +110,13 @@ const Sudoku = () => {
               ? ""
               : responseItem.value,
             eliminations: responseItem.eliminations,
+            locked: item.sudokuState != "",
           };
-        })
-      );
+        });
+      console.log(newGS);
+      setGridState(newGS);
       setSubmitState(true);
+      setResubmit(false);
     });
   }
 
@@ -126,7 +131,7 @@ const Sudoku = () => {
 
   function isErroredCell(i: number): boolean {
     const value = gridState[i].sudokuState;
-    if (!value || submitState) {
+    if (!value) {
       return false;
     }
     for (let j = 0; j<81; j++) {
@@ -144,6 +149,7 @@ const Sudoku = () => {
       sudokuState: newVal,
     };
     setGridState(newGridState);
+    setResubmit(true);
   }
 
   function deleteCell(i: number) {
@@ -174,10 +180,9 @@ const Sudoku = () => {
   }
 
   function nextHint() {
-    if (!solveOrder || solveOrderIndex === null || !submitState) {
-      // TODO: disable next hint button
-      return;
-    } else if (
+    console.log("index", solveOrderIndex);
+    if (
+      solveOrderIndex != null &&
       solveOrderIndex >= -1 &&
       solveOrderIndex < solveOrder.length - 1
     ) {
@@ -193,6 +198,7 @@ const Sudoku = () => {
       newGridState[solvedCellIndex] = {
         ...gridState[solvedCellIndex],
         sudokuState: gridState[solvedCellIndex].solvedValue.toString(),
+        locked: true,
       };
       setGridState(newGridState);
       setSolveOrderIndex(newSolveOrderIndex);
@@ -229,15 +235,19 @@ const Sudoku = () => {
         candidatesObj[j] = "candidate";
       } else if (hintEliminations[j].steps_index > solveOrderIndex+1) {
         candidatesObj[j] = "candidate";
-      } else if (hintEliminations[j].steps_index === solveOrderIndex+1) {
-        candidatesObj[j] = "removed";
       }
+      // else if (hintEliminations[j].steps_index === solveOrderIndex+1) {
+      //   candidatesObj[j] = "removed";
+      // }
     }
 
     return candidatesObj;
   }
 
   function handleCandidateCheckbox(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      handleSubmit();
+    }
     setShowCandidates(e.target.checked);
   }
 
@@ -247,6 +257,7 @@ const Sudoku = () => {
         sudokuState: "",
         solvedValue: 0,
         eliminations: [],
+        locked: false,
       })
     );
     setSubmitState(false);
@@ -283,7 +294,6 @@ const Sudoku = () => {
           onCellChange={onCellChange}
           deleteCell={deleteCell}
           handleSubmit={handleSubmit}
-          submitted={submitState}
           isErroredCell={isErroredCell}
           isNewestHintCell={isNewestHintCell}
           getCandidates={getCandidates}
@@ -292,7 +302,14 @@ const Sudoku = () => {
       <Button onClick={handleSubmit} disabled={submitState}>
         Submit
       </Button>
-      <Button disabled={!submitState} onClick={nextHint}>
+      <Button disabled={!submitState} onClick={
+        () => {
+          if (resubmit) {
+            handleSubmit().then(() => nextHint())
+          } else {
+            nextHint();
+          }
+      }}>
         Hint
       </Button>
       <Button onClick={reset}>Reset</Button>
@@ -304,7 +321,7 @@ const Sudoku = () => {
             onChange={handleCandidateCheckbox}
           />
         }
-        label="Show candidates"
+        label="Generate candidates"
       />
       <Snackbar open={solvedAlert.visibility}>
         <Alert
