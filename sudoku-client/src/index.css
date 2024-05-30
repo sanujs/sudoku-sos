@@ -23,6 +23,10 @@ body {
   min-height: 100vh;
 }
 
+#root {
+  min-width: 950px;
+}
+
 /* || Theme/color-scheme specifics */
 
 @media (prefers-color-scheme: light) {

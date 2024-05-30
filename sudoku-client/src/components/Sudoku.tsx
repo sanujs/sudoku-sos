@@ -2,6 +2,7 @@ import { Alert, Button, Checkbox, Container, FormControlLabel, Grid, Snackbar } 
 import axios from "axios";
 import Puzzle from "./Puzzle";
 import { useEffect, useState } from "react";
+import StepList from "./StepList";
 
 type ResponseData = {
   solved: boolean,
@@ -297,12 +298,7 @@ const Sudoku = () => {
   }
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        maxWidth: "95vw",
-      }}
-    >
+    <Container>
       <Grid className="sudoku-columns">
         <Puzzle
           gridState={gridState}
@@ -314,6 +310,7 @@ const Sudoku = () => {
           setNewestHint={setNewestHint}
           getCandidates={getCandidates}
         ></Puzzle>
+        <StepList></StepList>
       </Grid>
       <Button
         onClick={async () => {setGridState(await handleSubmit())}}

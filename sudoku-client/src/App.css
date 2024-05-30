@@ -7,7 +7,10 @@
   display: grid;
   margin: 25px;
   grid-template-columns: repeat(9, 1fr);
-  min-width: 550px;
+}
+
+.steplist {
+  margin: 25px;
 }
 
 /* || Cell component styles */
