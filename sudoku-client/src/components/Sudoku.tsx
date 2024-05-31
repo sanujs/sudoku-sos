@@ -1,5 +1,5 @@
 import { Alert, Button, Checkbox, Container, FormControlLabel, Grid, Snackbar } from "@mui/material";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import Puzzle from "./Puzzle";
 import { useEffect, useState } from "react";
 
@@ -75,16 +75,17 @@ const Sudoku = () => {
   const [solveOrderIndex, setSolveOrderIndex] = useState<number|null>(null);
   const [showCandidates, setShowCandidates] = useState(false);
   const [resubmit, setResubmit] = useState(false);
+  const [newestHint, setNewestHint] = useState<number|null>(null);
 
-  const handleSubmit = (): Promise<void | AxiosResponse> => {
+  const handleSubmit = async (): Promise<CellState[]> => {
     const grid: number[][] = [...new Array(9)].map(() => Array(9));
     for (let i = 0; i < 81; i++) {
       grid[Math.floor(i / 9)][i % 9] =
         gridState[i].sudokuState === "" ? 0 : Number(gridState[i].sudokuState);
     }
     
-    console.log(grid);
-    return axios.post("http://127.0.0.1:8080", grid).then((response) => {
+    console.log("Grid request", grid);
+    return await axios.post("http://127.0.0.1:8080", grid).then((response) => {
       console.log(response);
       const data: ResponseData = response.data;
       if (data.solved) {
@@ -113,10 +114,9 @@ const Sudoku = () => {
             locked: item.sudokuState != "",
           };
         });
-      console.log(newGS);
-      setGridState(newGS);
       setSubmitState(true);
       setResubmit(false);
+      return newGS;
     });
   }
 
@@ -179,7 +179,7 @@ const Sudoku = () => {
     return false;
   }
 
-  function nextHint() {
+  function nextHint(newGS: CellState[]): CellState[] {
     console.log("index", solveOrderIndex);
     if (
       solveOrderIndex != null &&
@@ -194,30 +194,17 @@ const Sudoku = () => {
         orderedElement = solveOrder[++newSolveOrderIndex];
       }
       const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
-      const newGridState = [...gridState];
+      const newGridState = [...newGS];
       newGridState[solvedCellIndex] = {
-        ...gridState[solvedCellIndex],
-        sudokuState: gridState[solvedCellIndex].solvedValue.toString(),
+        ...newGS[solvedCellIndex],
+        sudokuState: newGS[solvedCellIndex].solvedValue.toString(),
         locked: true,
       };
-      setGridState(newGridState);
       setSolveOrderIndex(newSolveOrderIndex);
+      setNewestHint(solvedCellIndex);
+      return newGridState;
     }
-  }
-
-  function isNewestHintCell(i: number): boolean {
-    if (
-      !solveOrder ||
-      solveOrderIndex === null ||
-      !solveOrder[solveOrderIndex]
-    ) {
-      return false;
-    }
-    const solveStep: Step = solveOrder[solveOrderIndex];
-    if ("Solve" in solveStep) {
-      return i === twoToOneIndex(solveStep["Solve"]["index"]);
-    }
-    return false;
+    return newGS;
   }
 
   function getCandidates(i: number): string[] {
@@ -295,19 +282,19 @@ const Sudoku = () => {
           deleteCell={deleteCell}
           handleSubmit={handleSubmit}
           isErroredCell={isErroredCell}
-          isNewestHintCell={isNewestHintCell}
+          newestHint={newestHint}
           getCandidates={getCandidates}
         ></Puzzle>
       </Grid>
-      <Button onClick={handleSubmit} disabled={submitState}>
+      <Button onClick={async () => {setGridState(await handleSubmit())}} disabled={submitState}>
         Submit
       </Button>
       <Button disabled={!submitState} onClick={
         () => {
           if (resubmit) {
-            handleSubmit().then(() => nextHint())
+            handleSubmit().then((newGS) => setGridState(nextHint(newGS)))
           } else {
-            nextHint();
+            setGridState(nextHint(gridState));
           }
       }}>
         Hint

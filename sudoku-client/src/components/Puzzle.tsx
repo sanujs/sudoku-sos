@@ -9,7 +9,7 @@ type PuzzleProps = {
   deleteCell: (i: number) => void,
   handleSubmit: () => void,
   isErroredCell: (i: number) => boolean,
-  isNewestHintCell: (i: number) => boolean,
+  newestHint: number|null,
   getCandidates: (i: number) => string[],
 }
 const Puzzle = (props: PuzzleProps) => {
@@ -42,7 +42,7 @@ const Puzzle = (props: PuzzleProps) => {
         cellRef={cellRefs.current[i]}
         locked={props.gridState[i].locked}
         error={props.isErroredCell(i)}
-        next={props.isNewestHintCell(i)}
+        next={props.newestHint==i}
         candidates={props.getCandidates(i)}
       />
     );
