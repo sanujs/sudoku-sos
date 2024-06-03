@@ -246,7 +246,7 @@ const Sudoku = () => {
       } else if (hintEliminations[j].steps_index > solveOrderIndex+1) {
         candidatesObj[j] = "candidate";
       }
-      else if (hintEliminations[j].steps_index === solveOrderIndex+1) {
+      else if (hintEliminations[j].steps_index === solveOrderIndex+1 && solveOrderIndex > -1) {
         candidatesObj[j] = "removed";
       }
     }
@@ -311,10 +311,14 @@ const Sudoku = () => {
           handleSubmit={handleSubmit}
           isErroredCell={isErroredCell}
           newestHint={newestHint}
+          setNewestHint={setNewestHint}
           getCandidates={getCandidates}
         ></Puzzle>
       </Grid>
-      <Button onClick={async () => {setGridState(await handleSubmit())}} disabled={submitState}>
+      <Button
+        onClick={async () => {setGridState(await handleSubmit())}}
+        disabled={submitState}
+      >
         Submit
       </Button>
       <Button disabled={!submitState} onClick={

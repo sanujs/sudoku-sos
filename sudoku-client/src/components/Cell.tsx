@@ -116,7 +116,10 @@ const Cell = (props: CellProps) => {
           }
         }}
       />
-      <div className="candidates">{candidates}</div>
+      <div
+        className="candidates"
+        onClick={()=>props.changeFocus(i)}
+      >{candidates}</div>
     </AspectRatio>
   );
 };

@@ -10,13 +10,14 @@ type PuzzleProps = {
   handleSubmit: () => void,
   isErroredCell: (i: number) => boolean,
   newestHint: number|null,
+  setNewestHint: React.Dispatch<React.SetStateAction<number | null>>,
   getCandidates: (i: number) => string[],
 }
 const Puzzle = (props: PuzzleProps) => {
   function changeFocus(i: number) {
     if (cellRefs.current[i].current) {
       cellRefs.current[i].current.focus();
-
+      props.setNewestHint(null);
     }
   }
 
