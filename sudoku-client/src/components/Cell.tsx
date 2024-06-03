@@ -109,7 +109,7 @@ const Cell = (props: CellProps) => {
             default:
               if (!/[1-9]/.test(event.key)) {
                 event.preventDefault();
-              } else if (!props.locked) {
+              } else if (!props.locked && props.value !== "") {
                 props.deleteCell(i);
               }
               break;

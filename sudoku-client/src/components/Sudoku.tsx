@@ -15,7 +15,7 @@ type GridElement = {
   eliminations: {
     [key: number]: {
       algorithm: string,
-      eliminators: number[][],
+      eliminators: number[],
       steps_index: number,
       value: number,
     }
@@ -48,7 +48,7 @@ export type CellState = {
   eliminations: {
     [key: number]: {
       algorithm: string,
-      eliminators: number[][],
+      eliminators: number[],
       steps_index: number,
       value: number,
     }
@@ -143,22 +143,45 @@ const Sudoku = () => {
   }
 
   function onCellChange(i: number, newVal: string) {
+    // Update candidates
     const newGridState = [...gridState];
+    for (let j = 0; j<81; j++) {
+      if (i!==j && sameHouse(i, j)) {
+        // Re-introduce candidates
+        for (const elim in newGridState[j].eliminations) {
+          if (
+            twoToOneIndex(newGridState[j].eliminations[elim].eliminators) === i &&
+            newGridState[j].eliminations[elim].steps_index === -1
+          ) {
+            delete newGridState[j].eliminations[elim];
+          }
+        }
+        // Remove newVal from same house candidates
+        newGridState[j] = {
+          ...newGridState[j],
+          eliminations: {
+            ...newGridState[j].eliminations,
+            [newVal]: {
+              value: newVal,
+              algorithm: "FilledCell",
+              eliminators: [Math.floor(i / 9), i % 9],
+              steps_index: -1,
+            }
+          }
+        }
+      }
+    }
     newGridState[i] = {
       ...gridState[i],
       sudokuState: newVal,
     };
     setGridState(newGridState);
     setResubmit(true);
+    setNewestHint(null);
   }
 
   function deleteCell(i: number) {
-    const newGridState = [...gridState];
-    newGridState[i] = {
-      ...gridState[i],
-      sudokuState: "",
-    };
-    setGridState(newGridState);
+    onCellChange(i, "");
   }
 
   function sameHouse(a: number, b: number) {
@@ -223,9 +246,9 @@ const Sudoku = () => {
       } else if (hintEliminations[j].steps_index > solveOrderIndex+1) {
         candidatesObj[j] = "candidate";
       }
-      // else if (hintEliminations[j].steps_index === solveOrderIndex+1) {
-      //   candidatesObj[j] = "removed";
-      // }
+      else if (hintEliminations[j].steps_index === solveOrderIndex+1) {
+        candidatesObj[j] = "removed";
+      }
     }
 
     return candidatesObj;
