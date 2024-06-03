@@ -231,9 +231,14 @@ const Sudoku = () => {
     return candidatesObj;
   }
 
-  function handleCandidateCheckbox(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleCandidateCheckbox(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      handleSubmit();
+      setShowCandidates(true);
+      if (resubmit) {
+        setGridState(await handleSubmit().then((newGS)=>{
+          return newGS;
+        }));
+      }
     }
     setShowCandidates(e.target.checked);
   }
