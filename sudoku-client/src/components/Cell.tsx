@@ -2,19 +2,19 @@ import { AspectRatio } from "@mui/joy";
 import { MutableRefObject } from "react";
 
 type CellProps = {
-  index: number,
-  key: number,
-  value: string,
-  onCellChange: (i: number, newVal: string) => void,
-  deleteCell: (i: number) => void,
-  changeFocus: (i: number) => void,
-  handleSubmit: () => void,
-  cellRef: MutableRefObject<HTMLInputElement|null>,
-  locked: boolean,
-  error: boolean,
-  next: boolean,
-  candidates: string[],
-}
+  index: number;
+  key: number;
+  value: string;
+  onCellChange: (i: number, newVal: string) => void;
+  deleteCell: (i: number) => void;
+  changeFocus: (i: number) => void;
+  handleSubmit: () => void;
+  cellRef: MutableRefObject<HTMLInputElement | null>;
+  locked: boolean;
+  error: boolean;
+  next: boolean;
+  candidates: string[];
+};
 
 const Cell = (props: CellProps) => {
   const i = props.index;
@@ -36,13 +36,7 @@ const Cell = (props: CellProps) => {
   const candidates = [];
   for (let j = 1; j < 10; j++) {
     if (j in props.candidates) {
-      candidates.push(
-        <span
-          className={props.candidates[j]}
-        >
-          {j}
-        </span>
-      );
+      candidates.push(<span className={props.candidates[j]}>{j}</span>);
     }
   }
   return (
@@ -116,10 +110,9 @@ const Cell = (props: CellProps) => {
           }
         }}
       />
-      <div
-        className="candidates"
-        onClick={()=>props.changeFocus(i)}
-      >{candidates}</div>
+      <div className="candidates" onClick={() => props.changeFocus(i)}>
+        {candidates}
+      </div>
     </AspectRatio>
   );
 };

@@ -1,5 +1,5 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 const StepList = (props) => {
   return (
@@ -7,7 +7,7 @@ const StepList = (props) => {
       <Card variant="outlined">Hi</Card>
       <Card variant="outlined">Hii</Card>
     </div>
-  )
-}
+  );
+};
 
 export default StepList;
