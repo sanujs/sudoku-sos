@@ -1,16 +1,13 @@
 import {
   Alert,
-  Button,
-  Checkbox,
   Container,
-  FormControlLabel,
-  Grid,
   Snackbar,
 } from "@mui/material";
 import axios from "axios";
 import Puzzle from "./Puzzle";
 import { useEffect, useState } from "react";
 import StepList from "./StepList";
+import Controls from "./Controls";
 
 type ResponseData = {
   solved: boolean;
@@ -315,7 +312,7 @@ const Sudoku = () => {
 
   return (
     <Container>
-      <Grid className="sudoku-columns">
+      <div className="sudoku-columns">
         <Puzzle
           gridState={gridState}
           onCellChange={onCellChange}
@@ -326,39 +323,22 @@ const Sudoku = () => {
           setNewestHint={setNewestHint}
           getCandidates={getCandidates}
         ></Puzzle>
-        <StepList></StepList>
-      </Grid>
-      <Button
-        onClick={async () => {
-          setGridState(await handleSubmit());
-        }}
-        disabled={submitState}
-      >
-        Submit
-      </Button>
-      <Button
-        disabled={!submitState}
-        onClick={() => {
-          if (resubmit) {
-            handleSubmit().then((newGS) => setGridState(nextHint(newGS)));
-          } else {
-            setGridState(nextHint(gridState));
-          }
-        }}
-      >
-        Hint
-      </Button>
-      <Button onClick={reset}>Reset</Button>
-      <Button onClick={exampleSudoku}>Example</Button>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={showCandidates}
-            onChange={handleCandidateCheckbox}
-          />
-        }
-        label="Generate candidates"
-      />
+        <div>
+          <Controls
+            submitState={submitState}
+            handleSubmit={handleSubmit}
+            nextHint={nextHint}
+            gridState={gridState}
+            setGridState={setGridState}
+            resubmit={resubmit}
+            reset={reset}
+            exampleSudoku={exampleSudoku}
+            showCandidates={showCandidates}
+            handleCandidateCheckbox={handleCandidateCheckbox}
+          ></Controls>
+          <StepList></StepList>
+        </div>
+      </div>
       <Snackbar open={solvedAlert.visibility}>
         <Alert
           severity={solvedAlert.solved ? "success" : "error"}
