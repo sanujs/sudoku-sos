@@ -1,11 +1,24 @@
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import { Step } from "./Sudoku";
 
-const StepList = (props) => {
+type StepListProps = {
+  solveOrder: Step[];
+  solveOrderIndex: number | null;
+  newestHint: number | null;
+}
+const StepList = (props: StepListProps) => {
+  const list = [];
+  if (props.newestHint && props.solveOrderIndex) {
+    const nextStep = props.solveOrder[props.solveOrderIndex];
+    if (nextStep && "Solve" in nextStep) {
+      list.push(
+        <Card variant="outlined">{nextStep.Solve.algorithm}</Card>
+      )
+    }
+  }
   return (
     <div className="steplist">
-      <Card variant="outlined">Hi</Card>
-      <Card variant="outlined">Hii</Card>
+      {list}
     </div>
   );
 };

@@ -28,7 +28,7 @@ type GridElement = {
   };
 };
 
-type Step = Solve | Elimination;
+export type Step = Solve | Elimination;
 
 type Solve = {
   Solve: {
@@ -336,7 +336,11 @@ const Sudoku = () => {
             showCandidates={showCandidates}
             handleCandidateCheckbox={handleCandidateCheckbox}
           ></Controls>
-          <StepList></StepList>
+          <StepList
+            solveOrder={solveOrder}
+            solveOrderIndex={solveOrderIndex}
+            newestHint={newestHint}
+          ></StepList>
         </div>
       </div>
       <Snackbar open={solvedAlert.visibility}>
