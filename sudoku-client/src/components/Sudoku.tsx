@@ -79,7 +79,7 @@ const Sudoku = () => {
   });
   const [solveOrder, setSolveOrder] = useState<Step[]>([]);
   const [solveOrderIndex, setSolveOrderIndex] = useState<number | null>(null);
-  const [showCandidates, setShowCandidates] = useState(false);
+  const [showCandidates, setShowCandidates] = useState(true);
   const [resubmit, setResubmit] = useState(false);
   const [newestHint, setNewestHint] = useState<number | null>(null);
 
@@ -115,7 +115,7 @@ const Sudoku = () => {
           ...item,
           solvedValue: !responseItem.value ? "" : responseItem.value,
           eliminations: responseItem.eliminations,
-          locked: item.sudokuState != "",
+          locked: true,
         };
       });
       setSubmitState(true);
@@ -217,23 +217,22 @@ const Sudoku = () => {
       solveOrderIndex >= -1 &&
       solveOrderIndex < solveOrder.length - 1
     ) {
-      let newSolveOrderIndex: number = solveOrderIndex + 1;
-      let orderedElement: Step = solveOrder[newSolveOrderIndex];
-      const newReductionList = [];
-      while ("Elimination" in orderedElement) {
-        newReductionList.push(orderedElement["Elimination"]);
-        orderedElement = solveOrder[++newSolveOrderIndex];
-      }
-      const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
-      const newGridState = [...newGS];
-      newGridState[solvedCellIndex] = {
-        ...newGS[solvedCellIndex],
-        sudokuState: newGS[solvedCellIndex].solvedValue.toString(),
-        locked: true,
-      };
+      const newSolveOrderIndex: number = solveOrderIndex + 1;
+      const orderedElement: Step = solveOrder[newSolveOrderIndex];
       setSolveOrderIndex(newSolveOrderIndex);
-      setNewestHint(solvedCellIndex);
-      return newGridState;
+      if ("Solve" in orderedElement) {
+        const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
+        const newGridState = [...newGS];
+        newGridState[solvedCellIndex] = {
+          ...newGS[solvedCellIndex],
+          sudokuState: newGS[solvedCellIndex].solvedValue.toString(),
+          locked: true,
+        };
+        setNewestHint(solvedCellIndex);
+        return newGridState;
+      } else {
+        setNewestHint(null);
+      }
     }
     return newGS;
   }

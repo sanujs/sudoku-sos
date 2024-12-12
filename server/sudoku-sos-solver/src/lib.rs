@@ -194,7 +194,7 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                                         .eliminate_candidate(Elimination {
                                             value: *c as u8,
                                             eliminators: (*value.clone()).to_vec(),
-                                            steps_index: puzzle.steps.len(),
+                                            steps_index: puzzle.steps.len() + 1,
                                             algorithm: EliminationAlgorithm::NakedSet,
                                         })
                                         .is_some()
@@ -212,7 +212,7 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                                 algorithm: EliminationAlgorithm::NakedSet,
                                 eliminators: (*value.clone()).to_vec(),
                                 victims,
-                                steps_index: puzzle.steps.len(),
+                                steps_index: puzzle.steps.len() + 1,
                             })
                         }
                     }
