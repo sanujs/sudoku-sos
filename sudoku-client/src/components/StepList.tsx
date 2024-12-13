@@ -1,4 +1,5 @@
-import Card from "@mui/material/Card";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import { Step } from "./Sudoku";
 
 type StepListProps = {
@@ -7,18 +8,22 @@ type StepListProps = {
   newestHint: number | null;
 }
 const StepList = (props: StepListProps) => {
-  const list = [];
-  if (props.newestHint && props.solveOrderIndex) {
-    const nextStep = props.solveOrder[props.solveOrderIndex];
-    if (nextStep && "Solve" in nextStep) {
-      list.push(
-        <Card variant="outlined">{nextStep.Solve.algorithm}</Card>
-      )
-    }
-  }
   return (
     <div className="steplist">
-      {list}
+      <List
+        sx={{
+          maxHeight: 450,
+          overflow: 'auto',
+        }}
+      >
+        {
+          props.solveOrder.map((step, index) => {
+            const algorithm = "Solve" in step ? step.Solve.algorithm : step.Elimination.algorithm;
+            const color = props.solveOrderIndex && index < props.solveOrderIndex ? "grey" : "black";
+            return <ListItem key={`key-${index}`} sx={{color: color}}>{algorithm}</ListItem>
+          })
+        }
+      </List>
     </div>
   );
 };
