@@ -9,8 +9,18 @@
   grid-template-columns: repeat(9, 1fr);
 }
 
+/* || StepList */
+
 .steplist {
   margin: 25px;
+}
+
+.solve {
+  background-color: aliceblue;
+}
+
+.elimination {
+  background-color: lavenderblush;
 }
 
 /* || Cell component styles */

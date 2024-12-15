@@ -210,7 +210,7 @@ const Sudoku = () => {
     return false;
   }
 
-  function nextHint(newGS: CellState[]): CellState[] {
+  function nextHint(oldGS: CellState[]): CellState[] {
     console.log("index", solveOrderIndex);
     if (
       solveOrderIndex != null &&
@@ -222,10 +222,10 @@ const Sudoku = () => {
       setSolveOrderIndex(newSolveOrderIndex);
       if ("Solve" in orderedElement) {
         const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
-        const newGridState = [...newGS];
+        const newGridState = [...oldGS];
         newGridState[solvedCellIndex] = {
-          ...newGS[solvedCellIndex],
-          sudokuState: newGS[solvedCellIndex].solvedValue.toString(),
+          ...oldGS[solvedCellIndex],
+          sudokuState: oldGS[solvedCellIndex].solvedValue.toString(),
           locked: true,
         };
         setNewestHint(solvedCellIndex);
@@ -234,7 +234,7 @@ const Sudoku = () => {
         setNewestHint(null);
       }
     }
-    return newGS;
+    return oldGS;
   }
 
   function getCandidates(i: number): string[] {
