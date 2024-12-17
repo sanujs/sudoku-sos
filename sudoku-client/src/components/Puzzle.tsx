@@ -9,15 +9,15 @@ type PuzzleProps = {
   deleteCell: (i: number) => void;
   handleSubmit: () => void;
   isErroredCell: (i: number) => boolean;
-  newestHint: number | null;
-  setNewestHint: React.Dispatch<React.SetStateAction<number | null>>;
+  newestHints: number[];
+  setNewestHint: React.Dispatch<React.SetStateAction<number[]>>;
   getCandidates: (i: number) => string[];
 };
 const Puzzle = (props: PuzzleProps) => {
   function changeFocus(i: number) {
     if (cellRefs.current[i].current) {
       cellRefs.current[i].current.focus();
-      props.setNewestHint(null);
+      props.setNewestHint([]);
     }
   }
 
@@ -45,7 +45,7 @@ const Puzzle = (props: PuzzleProps) => {
         cellRef={cellRefs.current[i]}
         locked={props.gridState[i].locked}
         error={props.isErroredCell(i)}
-        next={props.newestHint == i}
+        next={props.newestHints.includes(i)}
         candidates={props.getCandidates(i)}
       />
     );

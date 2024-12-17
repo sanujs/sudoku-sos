@@ -83,7 +83,7 @@ const Sudoku = () => {
   const [solveOrderIndex, setSolveOrderIndex] = useState<number | null>(null);
   const [showCandidates, setShowCandidates] = useState(true);
   const [resubmit, setResubmit] = useState(false);
-  const [newestHint, setNewestHint] = useState<number | null>(null);
+  const [newestHintss, setNewestHint] = useState<number[]>([]);
 
   const handleSubmit = async (): Promise<CellState[]> => {
     const grid: number[][] = [...new Array(9)].map(() => Array(9));
@@ -185,7 +185,7 @@ const Sudoku = () => {
     };
     setGridState(newGridState);
     setResubmit(true);
-    setNewestHint(null);
+    setNewestHint([]);
   }
 
   function deleteCell(i: number) {
@@ -225,9 +225,13 @@ const Sudoku = () => {
         }
       });
       setGridState(newGridState);
-      setNewestHint(solvedCellIndex);
+      setNewestHint([solvedCellIndex]);
     } else {
-      setNewestHint(null);
+      const newHints: number[] = [];
+      for (const hintIndex of orderedElement.Elimination.eliminators) {
+        newHints.push(twoToOneIndex(hintIndex));
+      }
+      setNewestHint(newHints);
     }
   }
 
@@ -249,10 +253,14 @@ const Sudoku = () => {
           sudokuState: oldGS[solvedCellIndex].solvedValue.toString(),
           locked: true,
         };
-        setNewestHint(solvedCellIndex);
+        setNewestHint([solvedCellIndex]);
         return newGridState;
       } else {
-        setNewestHint(null);
+        const newHints: number[] = [];
+        for (const hintIndex of orderedElement.Elimination.eliminators) {
+          newHints.push(twoToOneIndex(hintIndex));
+        }
+        setNewestHint(newHints);
       }
     }
     return oldGS;
@@ -339,7 +347,7 @@ const Sudoku = () => {
           deleteCell={deleteCell}
           handleSubmit={handleSubmit}
           isErroredCell={isErroredCell}
-          newestHint={newestHint}
+          newestHints={newestHintss}
           setNewestHint={setNewestHint}
           getCandidates={getCandidates}
         ></Puzzle>
@@ -359,7 +367,7 @@ const Sudoku = () => {
           <StepList
             solveOrder={solveOrder}
             solveOrderIndex={solveOrderIndex}
-            newestHint={newestHint}
+            newestHints={newestHintss}
             onStepClick={onStepClick}
           ></StepList>
         </div>

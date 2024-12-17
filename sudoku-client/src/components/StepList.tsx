@@ -4,7 +4,7 @@ import { Step } from "./Sudoku";
 type StepListProps = {
   solveOrder: Step[];
   solveOrderIndex: number | null;
-  newestHint: number | null;
+  newestHints: number[];
   onStepClick: (i: number) => void;
 }
 const StepList = (props: StepListProps) => {
