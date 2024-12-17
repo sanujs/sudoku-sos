@@ -1,5 +1,6 @@
 import { List, ListItem, ListItemButton } from '@mui/material';
 import { Step } from "./Sudoku";
+import { formatAlgorithmString } from "../utils";
 
 type StepListProps = {
   solveOrder: Step[];
@@ -33,7 +34,7 @@ const StepList = (props: StepListProps) => {
               <ListItemButton
                 onClick={() => {props.onStepClick(index)}}
               >
-                {algorithm}
+                {formatAlgorithmString(algorithm)}
               </ListItemButton>
             </ListItem>
           })
