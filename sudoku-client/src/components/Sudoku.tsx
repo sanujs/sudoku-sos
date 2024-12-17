@@ -26,6 +26,7 @@ type GridElement = {
       value: number;
     };
   };
+  steps_index: number;
 };
 
 export type Step = Solve | Elimination;
@@ -60,6 +61,7 @@ export type CellState = {
     };
   };
   locked: boolean;
+  steps_index: number;
 };
 
 const Sudoku = () => {
@@ -116,6 +118,7 @@ const Sudoku = () => {
           solvedValue: !responseItem.value ? "" : responseItem.value,
           eliminations: responseItem.eliminations,
           locked: true,
+          steps_index: responseItem.steps_index,
         };
       });
       setSubmitState(true);
@@ -208,6 +211,24 @@ const Sudoku = () => {
       return true;
     }
     return false;
+  }
+
+  function onStepClick(newSolveOrderIndex: number) {
+    const orderedElement: Step = solveOrder[newSolveOrderIndex];
+    setSolveOrderIndex(newSolveOrderIndex)
+    if ("Solve" in orderedElement) {
+      const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
+      const newGridState: CellState[] = gridState.map((cell: CellState) => {
+        return {
+          ...cell,
+          sudokuState: newSolveOrderIndex >= cell.steps_index ? cell.solvedValue.toString() : "",
+        }
+      });
+      setGridState(newGridState);
+      setNewestHint(solvedCellIndex);
+    } else {
+      setNewestHint(null);
+    }
   }
 
   function nextHint(oldGS: CellState[]): CellState[] {
@@ -339,6 +360,7 @@ const Sudoku = () => {
             solveOrder={solveOrder}
             solveOrderIndex={solveOrderIndex}
             newestHint={newestHint}
+            onStepClick={onStepClick}
           ></StepList>
         </div>
       </div>

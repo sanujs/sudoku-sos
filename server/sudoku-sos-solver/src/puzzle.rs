@@ -27,6 +27,7 @@ pub enum Step {
         index: (usize, usize),
         value: u8,
         algorithm: SolveAlgorithm,
+        steps_index: usize,
     },
 }
 
@@ -55,6 +56,7 @@ impl Puzzle {
                     value: *element,
                     eliminations: HashMap::new(),
                     index: (r_index, c_index),
+                    steps_index: 0,
                 });
                 if *element == 0 {
                     empty_count += 1;
@@ -103,13 +105,15 @@ impl Puzzle {
         col: usize,
         algorithm: SolveAlgorithm,
         value: u8,
+        steps_index: usize,
     ) -> Option<u32> {
-        match self.grid[row][col].fill(value as u8) {
+        match self.grid[row][col].fill(value as u8, steps_index) {
             Some(_) => {
                 self.steps.push(Step::Solve {
                     index: (row, col),
                     value,
                     algorithm,
+                    steps_index,
                 });
                 Some(self.post_fill_eliminations(row, col))
             }

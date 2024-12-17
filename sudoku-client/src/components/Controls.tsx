@@ -37,7 +37,7 @@ const Controls = (props: ControlsProps) => {
           }
         }}
       >
-        Hint
+        Next
       </Button>
       <Button onClick={props.reset}>Reset</Button>
       <Button onClick={props.exampleSudoku}>Example</Button>

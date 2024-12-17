@@ -5,6 +5,7 @@ type StepListProps = {
   solveOrder: Step[];
   solveOrderIndex: number | null;
   newestHint: number | null;
+  onStepClick: (i: number) => void;
 }
 const StepList = (props: StepListProps) => {
   return (
@@ -21,7 +22,7 @@ const StepList = (props: StepListProps) => {
             const algorithm = "Solve" in step ? step.Solve.algorithm : step.Elimination.algorithm;
             const color = props.solveOrderIndex && index < props.solveOrderIndex ? "grey" : "black";
             return <ListItem
-              key={`key-${index}`}
+              key={index}
               className={stepType}
               sx={{
                 color: color,
@@ -29,7 +30,9 @@ const StepList = (props: StepListProps) => {
                 fontWeight: props.solveOrderIndex == index ? "bold" : "normal",
               }}
             >
-              <ListItemButton>
+              <ListItemButton
+                onClick={() => {props.onStepClick(index)}}
+              >
                 {algorithm}
               </ListItemButton>
             </ListItem>
