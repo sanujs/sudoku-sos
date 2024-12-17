@@ -1,60 +1,68 @@
-import { Alert, Button, Checkbox, Container, FormControlLabel, Grid, Snackbar } from "@mui/material";
+import {
+  Alert,
+  Container,
+  Snackbar,
+} from "@mui/material";
 import axios from "axios";
 import Puzzle from "./Puzzle";
 import { useEffect, useState } from "react";
+import StepList from "./StepList";
+import Controls from "./Controls";
 
 type ResponseData = {
-  solved: boolean,
-  grid: GridElement[][],
-  steps: Step[],
-}
+  solved: boolean;
+  grid: GridElement[][];
+  steps: Step[];
+};
 
 type GridElement = {
-  value: number,
-  index: number[],
+  value: number;
+  index: number[];
   eliminations: {
     [key: number]: {
-      algorithm: string,
-      eliminators: number[],
-      steps_index: number,
-      value: number,
-    }
-  },
-}
+      algorithm: string;
+      eliminators: number[];
+      steps_index: number;
+      value: number;
+    };
+  };
+  steps_index: number;
+};
 
-type Step = Solve | Elimination
+export type Step = Solve | Elimination;
 
 type Solve = {
   Solve: {
-    index: number[],
-    value: number,
-    algorithm: string,
-  }
-}
+    index: number[];
+    value: number;
+    algorithm: string;
+  };
+};
 
 type Elimination = {
   Elimination: {
-    value: number,
-    eliminators: number[][],
-    steps_index: number,
-    victims: number[][],
-    algorithm: string,
-  }
-}
+    value: number;
+    eliminators: number[][];
+    steps_index: number;
+    victims: number[][];
+    algorithm: string;
+  };
+};
 
 export type CellState = {
-  sudokuState: string,
-  solvedValue: string|number,
+  sudokuState: string;
+  solvedValue: string | number;
   eliminations: {
     [key: number]: {
-      algorithm: string,
-      eliminators: number[],
-      steps_index: number,
-      value: number,
-    }
-  },
-  locked: boolean,
-}
+      algorithm: string;
+      eliminators: number[];
+      steps_index: number;
+      value: number;
+    };
+  };
+  locked: boolean;
+  steps_index: number;
+};
 
 const Sudoku = () => {
   const [gridState, setGridState] = useState<CellState[]>(
@@ -72,10 +80,10 @@ const Sudoku = () => {
     message: "",
   });
   const [solveOrder, setSolveOrder] = useState<Step[]>([]);
-  const [solveOrderIndex, setSolveOrderIndex] = useState<number|null>(null);
-  const [showCandidates, setShowCandidates] = useState(false);
+  const [solveOrderIndex, setSolveOrderIndex] = useState<number | null>(null);
+  const [showCandidates, setShowCandidates] = useState(true);
   const [resubmit, setResubmit] = useState(false);
-  const [newestHint, setNewestHint] = useState<number|null>(null);
+  const [newestHintss, setNewestHint] = useState<number[]>([]);
 
   const handleSubmit = async (): Promise<CellState[]> => {
     const grid: number[][] = [...new Array(9)].map(() => Array(9));
@@ -83,7 +91,7 @@ const Sudoku = () => {
       grid[Math.floor(i / 9)][i % 9] =
         gridState[i].sudokuState === "" ? 0 : Number(gridState[i].sudokuState);
     }
-    
+
     console.log("Grid request", grid);
     return await axios.post("http://127.0.0.1:8080", grid).then((response) => {
       console.log(response);
@@ -104,21 +112,20 @@ const Sudoku = () => {
       setSolveOrder(data.steps);
       setSolveOrderIndex(-1);
       const newGS = gridState.map((item, i) => {
-          const responseItem = data.grid[Math.floor(i / 9)][i % 9];
-          return {
-            ...item,
-            solvedValue: !responseItem.value
-              ? ""
-              : responseItem.value,
-            eliminations: responseItem.eliminations,
-            locked: item.sudokuState != "",
-          };
-        });
+        const responseItem = data.grid[Math.floor(i / 9)][i % 9];
+        return {
+          ...item,
+          solvedValue: !responseItem.value ? "" : responseItem.value,
+          eliminations: responseItem.eliminations,
+          locked: true,
+          steps_index: responseItem.steps_index,
+        };
+      });
       setSubmitState(true);
       setResubmit(false);
       return newGS;
     });
-  }
+  };
 
   useEffect(() => {
     console.log("Gridstate", gridState);
@@ -127,15 +134,15 @@ const Sudoku = () => {
   // Converts [row, column] index format to single value between 0-81
   const twoToOneIndex = (arr: number[]): number => {
     return arr[0] * 9 + arr[1];
-  }
+  };
 
   function isErroredCell(i: number): boolean {
     const value = gridState[i].sudokuState;
     if (!value) {
       return false;
     }
-    for (let j = 0; j<81; j++) {
-      if (i!==j && sameHouse(i, j) && value === gridState[j].sudokuState) {
+    for (let j = 0; j < 81; j++) {
+      if (i !== j && sameHouse(i, j) && value === gridState[j].sudokuState) {
         return true;
       }
     }
@@ -145,12 +152,13 @@ const Sudoku = () => {
   function onCellChange(i: number, newVal: string) {
     // Update candidates
     const newGridState = [...gridState];
-    for (let j = 0; j<81; j++) {
-      if (i!==j && sameHouse(i, j)) {
+    for (let j = 0; j < 81; j++) {
+      if (i !== j && sameHouse(i, j)) {
         // Re-introduce candidates
         for (const elim in newGridState[j].eliminations) {
           if (
-            twoToOneIndex(newGridState[j].eliminations[elim].eliminators) === i &&
+            twoToOneIndex(newGridState[j].eliminations[elim].eliminators) ===
+              i &&
             newGridState[j].eliminations[elim].steps_index === -1
           ) {
             delete newGridState[j].eliminations[elim];
@@ -166,9 +174,9 @@ const Sudoku = () => {
               algorithm: "FilledCell",
               eliminators: [Math.floor(i / 9), i % 9],
               steps_index: -1,
-            }
-          }
-        }
+            },
+          },
+        };
       }
     }
     newGridState[i] = {
@@ -177,7 +185,7 @@ const Sudoku = () => {
     };
     setGridState(newGridState);
     setResubmit(true);
-    setNewestHint(null);
+    setNewestHint([]);
   }
 
   function deleteCell(i: number) {
@@ -191,43 +199,71 @@ const Sudoku = () => {
     }
 
     // Same column
-    if (a%9 === b%9) {
+    if (a % 9 === b % 9) {
       return true;
     }
 
     // Same box
-    if (Math.floor(a/27) === Math.floor(b/27) && Math.floor(a%9/3) === Math.floor(b%9/3)) {
+    if (
+      Math.floor(a / 27) === Math.floor(b / 27) &&
+      Math.floor((a % 9) / 3) === Math.floor((b % 9) / 3)
+    ) {
       return true;
     }
     return false;
   }
 
-  function nextHint(newGS: CellState[]): CellState[] {
+  function onStepClick(newSolveOrderIndex: number) {
+    const orderedElement: Step = solveOrder[newSolveOrderIndex];
+    setSolveOrderIndex(newSolveOrderIndex)
+    if ("Solve" in orderedElement) {
+      const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
+      const newGridState: CellState[] = gridState.map((cell: CellState) => {
+        return {
+          ...cell,
+          sudokuState: newSolveOrderIndex >= cell.steps_index ? cell.solvedValue.toString() : "",
+        }
+      });
+      setGridState(newGridState);
+      setNewestHint([solvedCellIndex]);
+    } else {
+      const newHints: number[] = [];
+      for (const hintIndex of orderedElement.Elimination.eliminators) {
+        newHints.push(twoToOneIndex(hintIndex));
+      }
+      setNewestHint(newHints);
+    }
+  }
+
+  function nextHint(oldGS: CellState[]): CellState[] {
     console.log("index", solveOrderIndex);
     if (
       solveOrderIndex != null &&
       solveOrderIndex >= -1 &&
       solveOrderIndex < solveOrder.length - 1
     ) {
-      let newSolveOrderIndex: number = solveOrderIndex + 1;
-      let orderedElement: Step = solveOrder[newSolveOrderIndex];
-      const newReductionList = [];
-      while ("Elimination" in orderedElement) {
-        newReductionList.push(orderedElement["Elimination"]);
-        orderedElement = solveOrder[++newSolveOrderIndex];
-      }
-      const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
-      const newGridState = [...newGS];
-      newGridState[solvedCellIndex] = {
-        ...newGS[solvedCellIndex],
-        sudokuState: newGS[solvedCellIndex].solvedValue.toString(),
-        locked: true,
-      };
+      const newSolveOrderIndex: number = solveOrderIndex + 1;
+      const orderedElement: Step = solveOrder[newSolveOrderIndex];
       setSolveOrderIndex(newSolveOrderIndex);
-      setNewestHint(solvedCellIndex);
-      return newGridState;
+      if ("Solve" in orderedElement) {
+        const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
+        const newGridState = [...oldGS];
+        newGridState[solvedCellIndex] = {
+          ...oldGS[solvedCellIndex],
+          sudokuState: oldGS[solvedCellIndex].solvedValue.toString(),
+          locked: true,
+        };
+        setNewestHint([solvedCellIndex]);
+        return newGridState;
+      } else {
+        const newHints: number[] = [];
+        for (const hintIndex of orderedElement.Elimination.eliminators) {
+          newHints.push(twoToOneIndex(hintIndex));
+        }
+        setNewestHint(newHints);
+      }
     }
-    return newGS;
+    return oldGS;
   }
 
   function getCandidates(i: number): string[] {
@@ -243,10 +279,12 @@ const Sudoku = () => {
     for (let j = 1; j < 10; j++) {
       if (!(j in hintEliminations)) {
         candidatesObj[j] = "candidate";
-      } else if (hintEliminations[j].steps_index > solveOrderIndex+1) {
+      } else if (hintEliminations[j].steps_index > solveOrderIndex + 1) {
         candidatesObj[j] = "candidate";
-      }
-      else if (hintEliminations[j].steps_index === solveOrderIndex+1 && solveOrderIndex > -1) {
+      } else if (
+        hintEliminations[j].steps_index === solveOrderIndex + 1 &&
+        solveOrderIndex > -1
+      ) {
         candidatesObj[j] = "removed";
       }
     }
@@ -254,13 +292,17 @@ const Sudoku = () => {
     return candidatesObj;
   }
 
-  async function handleCandidateCheckbox(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleCandidateCheckbox(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
     if (e.target.checked) {
       setShowCandidates(true);
       if (resubmit) {
-        setGridState(await handleSubmit().then((newGS)=>{
-          return newGS;
-        }));
+        setGridState(
+          await handleSubmit().then((newGS) => {
+            return newGS;
+          })
+        );
       }
     }
     setShowCandidates(e.target.checked);
@@ -297,51 +339,39 @@ const Sudoku = () => {
   }
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        maxWidth: "95vw",
-      }}
-    >
-      <Grid className="sudoku-columns">
+    <Container>
+      <div className="sudoku-columns">
         <Puzzle
           gridState={gridState}
           onCellChange={onCellChange}
           deleteCell={deleteCell}
           handleSubmit={handleSubmit}
           isErroredCell={isErroredCell}
-          newestHint={newestHint}
+          newestHints={newestHintss}
           setNewestHint={setNewestHint}
           getCandidates={getCandidates}
         ></Puzzle>
-      </Grid>
-      <Button
-        onClick={async () => {setGridState(await handleSubmit())}}
-        disabled={submitState}
-      >
-        Submit
-      </Button>
-      <Button disabled={!submitState} onClick={
-        () => {
-          if (resubmit) {
-            handleSubmit().then((newGS) => setGridState(nextHint(newGS)))
-          } else {
-            setGridState(nextHint(gridState));
-          }
-      }}>
-        Hint
-      </Button>
-      <Button onClick={reset}>Reset</Button>
-      <Button onClick={exampleSudoku}>Example</Button>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={showCandidates}
-            onChange={handleCandidateCheckbox}
-          />
-        }
-        label="Generate candidates"
-      />
+        <div>
+          <Controls
+            submitState={submitState}
+            handleSubmit={handleSubmit}
+            nextHint={nextHint}
+            gridState={gridState}
+            setGridState={setGridState}
+            resubmit={resubmit}
+            reset={reset}
+            exampleSudoku={exampleSudoku}
+            showCandidates={showCandidates}
+            handleCandidateCheckbox={handleCandidateCheckbox}
+          ></Controls>
+          <StepList
+            solveOrder={solveOrder}
+            solveOrderIndex={solveOrderIndex}
+            newestHints={newestHintss}
+            onStepClick={onStepClick}
+          ></StepList>
+        </div>
+      </div>
       <Snackbar open={solvedAlert.visibility}>
         <Alert
           severity={solvedAlert.solved ? "success" : "error"}

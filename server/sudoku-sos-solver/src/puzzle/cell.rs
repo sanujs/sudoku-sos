@@ -8,6 +8,7 @@ pub struct Cell {
     pub value: u8,
     pub eliminations: HashMap<u8, Elimination>,
     pub index: (usize, usize),
+    pub steps_index: usize,
 }
 
 #[derive(Debug, Serialize)]
@@ -25,9 +26,10 @@ pub enum EliminationAlgorithm {
 }
 
 impl Cell {
-    pub fn fill(&mut self, value: u8) -> Option<u8> {
+    pub fn fill(&mut self, value: u8, steps_index: usize) -> Option<u8> {
         if self.value == 0 {
             self.value = value;
+            self.steps_index = steps_index;
             Some(self.value)
         } else {
             None

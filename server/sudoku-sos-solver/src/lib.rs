@@ -90,7 +90,7 @@ fn unique_candidate(puzzle: &mut Puzzle) -> (u32, u32) {
             // If this candidate is unique to any row, col, or box then break the loop and fill it
             if unique[0] {
                 if let Some(fill_eliminations) =
-                    puzzle.fill_cell(cell.0, cell.1, SolveAlgorithm::UniqueBox, c as u8)
+                    puzzle.fill_cell(cell.0, cell.1, SolveAlgorithm::UniqueBox, c as u8, puzzle.steps.len())
                 {
                     eliminated_count += fill_eliminations;
                     filled_count += 1;
@@ -98,7 +98,7 @@ fn unique_candidate(puzzle: &mut Puzzle) -> (u32, u32) {
                 }
             } else if unique[1] {
                 if let Some(fill_eliminations) =
-                    puzzle.fill_cell(cell.0, cell.1, SolveAlgorithm::UniqueRow, c as u8)
+                    puzzle.fill_cell(cell.0, cell.1, SolveAlgorithm::UniqueRow, c as u8, puzzle.steps.len())
                 {
                     eliminated_count += fill_eliminations;
                     filled_count += 1;
@@ -106,7 +106,7 @@ fn unique_candidate(puzzle: &mut Puzzle) -> (u32, u32) {
                 }
             } else if unique[2] {
                 if let Some(fill_eliminations) =
-                    puzzle.fill_cell(cell.0, cell.1, SolveAlgorithm::UniqueCol, c as u8)
+                    puzzle.fill_cell(cell.0, cell.1, SolveAlgorithm::UniqueCol, c as u8, puzzle.steps.len())
                 {
                     eliminated_count += fill_eliminations;
                     filled_count += 1;
@@ -131,6 +131,7 @@ fn sole_candidate(puzzle: &mut Puzzle) -> (u32, u32) {
                 cell.1,
                 SolveAlgorithm::SoleCandidate,
                 candidates[0] as u8,
+                puzzle.steps.len(),
             ) {
                 eliminated_count += fill_eliminations;
                 filled_count += 1;
@@ -194,7 +195,7 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                                         .eliminate_candidate(Elimination {
                                             value: *c as u8,
                                             eliminators: (*value.clone()).to_vec(),
-                                            steps_index: puzzle.steps.len(),
+                                            steps_index: puzzle.steps.len() + 1,
                                             algorithm: EliminationAlgorithm::NakedSet,
                                         })
                                         .is_some()
@@ -212,7 +213,7 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                                 algorithm: EliminationAlgorithm::NakedSet,
                                 eliminators: (*value.clone()).to_vec(),
                                 victims,
-                                steps_index: puzzle.steps.len(),
+                                steps_index: puzzle.steps.len() + 1,
                             })
                         }
                     }
