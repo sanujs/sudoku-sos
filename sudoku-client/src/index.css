@@ -27,6 +27,24 @@ body {
   min-width: 950px;
 }
 
+header {
+  position: fixed;
+  top: 0;
+  padding: 20px 24px;
+  margin: 0 25px;
+  font-size: xx-large;
+  font-weight: 700;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  padding: 20px 24px;
+  margin: 0 25px;
+  font-size: small;
+  font-weight: 100;
+}
+
 /* || Theme/color-scheme specifics */
 
 @media (prefers-color-scheme: light) {
@@ -34,29 +52,11 @@ body {
     color: #213547;
     background-color: #ffffff;
   }
-
-  input {
-    background-color: white;
-    color: black;
-  }
-
-  input:disabled {
-    color: #1976d2;
-  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     color: #ffffff;
     background-color: #202020;
-  }
-
-  input {
-    background-color: #2c2c2c;
-    color: #d3d3d3;
-  }
-
-  input:disabled {
-    color: #63aaf1;
   }
 }

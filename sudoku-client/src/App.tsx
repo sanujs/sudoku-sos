@@ -4,7 +4,15 @@ import Sudoku from './components/Sudoku'
 function App() {
 
   return (
-    <Sudoku/>
+    <>
+      <header>
+        Sudoku SOS
+      </header>
+      <Sudoku/>
+      <footer>
+        Made by Sanuj
+      </footer>
+    </>
   )
 }
 
