@@ -10,7 +10,7 @@ function App() {
       </header>
       <Sudoku/>
       <footer>
-        Made by Sanuj
+        <a href='https://github.com/sanujs/sudoku-sos'>GitHub</a>
       </footer>
     </>
   )
