@@ -9,18 +9,38 @@
   grid-template-columns: repeat(9, 1fr);
 }
 
-/* || StepList */
-
-.steplist {
+.sidebar {
   margin: 25px;
 }
 
-.solve {
-  background-color: aliceblue;
+/* || StepList */
+
+@media (prefers-color-scheme: light) {
+  .solve {
+    background-color: aliceblue;
+  }
+
+  .elimination {
+    background-color: lavenderblush;
+  }
 }
 
-.elimination {
-  background-color: lavenderblush;
+@media (prefers-color-scheme: dark) {
+  .solve {
+    background-color: rgb(2, 38, 70);
+  }
+
+  .elimination {
+    background-color: rgb(85, 3, 20);
+  }
+
+  .new {
+    color: lightgray;
+  }
+
+  .old {
+    color: rgb(94, 93, 93);
+  }
 }
 
 /* || Cell component styles */
@@ -43,12 +63,16 @@ input:focus.cell{
 }
 
 @media (prefers-color-scheme: dark) {
+  input {
+    color: lightgrey;
+  }
   input:focus.cell{
-    background-color: darkslategrey;
+    background-color: #1976d2;
   }
 }
 
-/* Cell borders */
+/* || Cell borders */
+
 .thick-right {
   border-right: 3px solid black;
 }
@@ -114,6 +138,12 @@ input:focus.cell{
   grid-template-columns: 1fr 1fr 1fr;
   font-size: 0.8rem;
   text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .candidate {
+    color:lightgray;
+  }
 }
 
 .removed {
