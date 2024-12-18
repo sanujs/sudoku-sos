@@ -13,20 +13,20 @@ const StepList = (props: StepListProps) => {
     <div className="steplist">
       <List
         sx={{
-          maxHeight: 450,
+          maxHeight: 465,
           overflow: 'auto',
+          padding: 0,
         }}
       >
         {
           props.solveOrder.map((step, index) => {
             const stepType = "Solve" in step ? "solve" : "elimination";
             const algorithm = "Solve" in step ? step.Solve.algorithm : step.Elimination.algorithm;
-            const color = props.solveOrderIndex && index < props.solveOrderIndex ? "grey" : "black";
+            const color = props.solveOrderIndex && index < props.solveOrderIndex ? "old" : "new";
             return <ListItem
               key={index}
-              className={stepType}
+              className={stepType + " " + color}
               sx={{
-                color: color,
                 padding: 0,
                 fontWeight: props.solveOrderIndex == index ? "bold" : "normal",
               }}

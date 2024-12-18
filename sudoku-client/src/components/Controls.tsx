@@ -18,12 +18,10 @@ const Controls = (props: ControlsProps) => {
   return (
     <div>
       <Button
-        onClick={async () => {
-          props.setGridState(await props.handleSubmit());
-        }}
+        onClick={props.exampleSudoku}
         disabled={props.submitState}
       >
-        Submit
+        Example
       </Button>
       <Button
         disabled={!props.submitState}
@@ -40,7 +38,15 @@ const Controls = (props: ControlsProps) => {
         Next
       </Button>
       <Button onClick={props.reset}>Reset</Button>
-      <Button onClick={props.exampleSudoku}>Example</Button>
+      <Button
+        variant="contained"
+        onClick={async () => {
+          props.setGridState(await props.handleSubmit());
+        }}
+        disabled={props.submitState}
+      >
+        Submit
+      </Button>
       <FormControlLabel
         control={
           <Checkbox

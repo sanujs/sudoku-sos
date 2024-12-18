@@ -321,6 +321,7 @@ const Sudoku = () => {
     setSolvedAlert({ ...solvedAlert, visibility: false });
     setSolveOrder([]);
     setSolveOrderIndex(null);
+    setNewestHint([]);
   }
 
   function exampleSudoku() {
@@ -351,7 +352,7 @@ const Sudoku = () => {
           setNewestHint={setNewestHint}
           getCandidates={getCandidates}
         ></Puzzle>
-        <div>
+        <div className="sidebar">
           <Controls
             submitState={submitState}
             handleSubmit={handleSubmit}
