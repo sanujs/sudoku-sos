@@ -1,0 +1,24 @@
+{
+    "family": "sample-fargate",
+    "networkMode": "awsvpc", 
+    "containerDefinitions": [
+        {
+            "name": "fargate-app",
+            "image": "058264170586.dkr.ecr.us-east-2.amazonaws.com/sudoku-sos:latest", 
+            "portMappings": [
+                {
+                    "containerPort": 80, 
+                    "hostPort": 80, 
+                    "protocol": "tcp"
+                }
+            ], 
+            "essential": true
+        }
+    ], 
+    "requiresCompatibilities": [
+        "FARGATE"
+    ], 
+    "cpu": "256", 
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::058264170586:role/ecsTaskExecutionRole"
+}
