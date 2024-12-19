@@ -93,7 +93,7 @@ const Sudoku = () => {
     }
 
     console.log("Grid request", grid);
-    return await axios.post("http://127.0.0.1:80", grid).then((response) => {
+    return await axios.post("http://SudokuALB-1983908472.us-east-2.elb.amazonaws.com:80", grid).then((response) => {
       console.log(response);
       const data: ResponseData = response.data;
       if (data.solved) {
