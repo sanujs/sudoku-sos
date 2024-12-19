@@ -218,13 +218,6 @@ const Sudoku = () => {
     setSolveOrderIndex(newSolveOrderIndex)
     if ("Solve" in orderedElement) {
       const solvedCellIndex = twoToOneIndex(orderedElement["Solve"]["index"]);
-      const newGridState: CellState[] = gridState.map((cell: CellState) => {
-        return {
-          ...cell,
-          sudokuState: newSolveOrderIndex >= cell.steps_index ? cell.solvedValue.toString() : "",
-        }
-      });
-      setGridState(newGridState);
       setNewestHint([solvedCellIndex]);
     } else {
       const newHints: number[] = [];
@@ -233,6 +226,13 @@ const Sudoku = () => {
       }
       setNewestHint(newHints);
     }
+    const newGridState: CellState[] = gridState.map((cell: CellState) => {
+      return {
+        ...cell,
+        sudokuState: newSolveOrderIndex >= cell.steps_index ? cell.solvedValue.toString() : "",
+      }
+    });
+    setGridState(newGridState);
   }
 
   function nextHint(oldGS: CellState[]): CellState[] {
