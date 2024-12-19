@@ -19,7 +19,7 @@ pub async fn run_server() -> Result<(), std::io::Error> {
             .allow_any_method();
         App::new().wrap(cors).service(index)
     })
-    .bind(("0.0.0.0", 8080))?
+    .bind(("0.0.0.0", 80))?
     .run()
     .await
 }
