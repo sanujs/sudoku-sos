@@ -16,37 +16,39 @@ type ControlsProps = {
 };
 const Controls = (props: ControlsProps) => {
   return (
-    <div>
-      <Button
-        onClick={props.exampleSudoku}
-        disabled={props.submitState}
-      >
-        Example
-      </Button>
-      <Button
-        disabled={!props.submitState}
-        onClick={() => {
-          if (props.resubmit) {
-            props
-              .handleSubmit()
-              .then((newGS) => props.setGridState(props.nextHint(newGS)));
-          } else {
-            props.setGridState(props.nextHint(props.gridState));
-          }
-        }}
-      >
-        Next
-      </Button>
-      <Button onClick={props.reset}>Reset</Button>
-      <Button
-        variant="contained"
-        onClick={async () => {
-          props.setGridState(await props.handleSubmit());
-        }}
-        disabled={props.submitState}
-      >
-        Submit
-      </Button>
+    <div className="controls">
+      <div className="buttons">
+        <Button
+          onClick={props.exampleSudoku}
+          disabled={props.submitState}
+        >
+          Example
+        </Button>
+        <Button
+          disabled={!props.submitState}
+          onClick={() => {
+            if (props.resubmit) {
+              props
+                .handleSubmit()
+                .then((newGS) => props.setGridState(props.nextHint(newGS)));
+            } else {
+              props.setGridState(props.nextHint(props.gridState));
+            }
+          }}
+        >
+          Next
+        </Button>
+        <Button onClick={props.reset}>Reset</Button>
+        <Button
+          variant="contained"
+          onClick={async () => {
+            props.setGridState(await props.handleSubmit());
+          }}
+          disabled={props.submitState}
+        >
+          Submit
+        </Button>
+      </div>
       <FormControlLabel
         control={
           <Checkbox
