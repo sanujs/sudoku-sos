@@ -23,7 +23,7 @@ const Puzzle = (props: PuzzleProps) => {
 
   function onCellChange(i: number, newVal: string) {
     props.onCellChange(i, newVal);
-    if (i < 80) {
+    if (i < 80 && newVal) {
       changeFocus(i + 1);
     }
   }
