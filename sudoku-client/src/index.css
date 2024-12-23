@@ -25,10 +25,13 @@ body {
 #root {
   min-width: 950px;
   margin: auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
-  position: fixed;
+  min-height: 50px;
   top: 0;
   padding: 20px 24px;
   margin: 0 25px;
@@ -36,8 +39,12 @@ header {
   font-weight: 700;
 }
 
+.main {
+  flex: 1;
+}
+
 footer {
-  position: fixed;
+  min-height: 50px;
   bottom: 0;
   padding: 20px 24px;
   margin: 0 25px;
@@ -62,21 +69,15 @@ footer {
 }
 
 @media (max-width: 499px) {
-  body {
-    display: initial;
-  }
-
   #root {
-    min-width: 300px;
+    min-width: 350px;
   }
 
   header {
-    position: static;
     margin: 0;
   }
 
   footer {
-    position: static;
     margin: 0;
   }
 }
