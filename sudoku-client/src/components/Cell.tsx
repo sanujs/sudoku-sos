@@ -46,6 +46,7 @@ const Cell = (props: CellProps) => {
         className={className.join(" ")}
         id={i.toString()}
         value={props.value}
+        inputMode="numeric"
         disabled={props.locked}
         readOnly={props.locked}
         onChange={(e) => props.onCellChange(i, e.target.value)}
@@ -67,6 +68,9 @@ const Cell = (props: CellProps) => {
                 props.changeFocus(i - 9);
               }
               break;
+            case "Tab":
+            case "0":
+            case " ":
             case "Right":
             case "ArrowRight":
             case "l":
