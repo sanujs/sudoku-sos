@@ -165,3 +165,32 @@ input:focus.cell{
   color: red;
   text-decoration: line-through;
 }
+
+@media (max-width: 499px) {
+  .sudoku-columns {
+    grid-template-columns: 100%;
+    grid-template-rows: 70% 30%;
+  }
+
+  .puzzle-grid {
+    margin: 0;
+  }
+
+  .sidebar {
+    margin: 0;
+  }
+
+  input.cell {
+    font-size: 1.5rem;
+  }
+
+  .candidates {
+    font-size: 0.5rem;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+  }
+}

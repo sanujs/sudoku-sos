@@ -340,7 +340,7 @@ const Sudoku = () => {
   }
 
   return (
-    <Container>
+    <Container className="main">
       <div className="sudoku-columns">
         <Puzzle
           gridState={gridState}

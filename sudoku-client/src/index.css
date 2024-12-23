@@ -19,16 +19,19 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
   min-height: 100vh;
 }
 
 #root {
   min-width: 950px;
+  margin: auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
-  position: fixed;
+  min-height: 50px;
   top: 0;
   padding: 20px 24px;
   margin: 0 25px;
@@ -36,8 +39,12 @@ header {
   font-weight: 700;
 }
 
+.main {
+  flex: 1;
+}
+
 footer {
-  position: fixed;
+  min-height: 50px;
   bottom: 0;
   padding: 20px 24px;
   margin: 0 25px;
@@ -58,5 +65,20 @@ footer {
   :root {
     color: #ffffff;
     background-color: #202020;
+  }
+}
+
+@media (max-width: 499px) {
+  #root {
+    min-width: 350px;
+    width: 100%;
+  }
+
+  header {
+    margin: 0;
+  }
+
+  footer {
+    margin: 0;
   }
 }
