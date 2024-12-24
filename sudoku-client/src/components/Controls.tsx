@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Checkbox } from "@mui/material";
+import { Button, FormControlLabel, Checkbox, createTheme, ThemeProvider } from "@mui/material";
 import { CellState } from "./Sudoku";
 import { ChangeEvent } from "react";
 
@@ -14,40 +14,56 @@ type ControlsProps = {
   showCandidates: boolean;
   handleCandidateCheckbox: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 };
+const buttonTheme = createTheme({
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Nunito Sans"
+        }
+      }
+    }
+  }
+})
 const Controls = (props: ControlsProps) => {
   return (
     <div className="controls">
       <div className="buttons">
-        <Button
-          onClick={props.exampleSudoku}
-          disabled={props.submitState}
-        >
-          Example
-        </Button>
-        <Button
-          disabled={!props.submitState}
-          onClick={() => {
-            if (props.resubmit) {
-              props
-                .handleSubmit()
-                .then((newGS) => props.setGridState(props.nextHint(newGS)));
-            } else {
-              props.setGridState(props.nextHint(props.gridState));
-            }
-          }}
-        >
-          Next
-        </Button>
-        <Button onClick={props.reset}>Reset</Button>
-        <Button
-          variant="contained"
-          onClick={async () => {
-            props.setGridState(await props.handleSubmit());
-          }}
-          disabled={props.submitState}
-        >
-          Submit
-        </Button>
+        <ThemeProvider theme={buttonTheme}>
+          <Button
+            onClick={props.exampleSudoku}
+            disabled={props.submitState}
+            className={"nunito-sans-controls"}
+          >
+            Example
+          </Button>
+          <Button
+            className="nunito-sans-controls"
+            disabled={!props.submitState}
+            onClick={() => {
+              if (props.resubmit) {
+                props
+                  .handleSubmit()
+                  .then((newGS) => props.setGridState(props.nextHint(newGS)));
+              } else {
+                props.setGridState(props.nextHint(props.gridState));
+              }
+            }}
+          >
+            Next
+          </Button>
+          <Button onClick={props.reset}>Reset</Button>
+          <Button
+            className="nunito-sans-controls"
+            variant="contained"
+            onClick={async () => {
+              props.setGridState(await props.handleSubmit());
+            }}
+            disabled={props.submitState}
+          >
+            Submit
+          </Button>
+        </ThemeProvider>
       </div>
       <FormControlLabel
         control={

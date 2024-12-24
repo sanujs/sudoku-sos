@@ -33,10 +33,12 @@ const Cell = (props: CellProps) => {
   if (props.next) {
     className.push("next");
   }
+  const fontClass = "sono-number";
+  className.push(fontClass)
   const candidates = [];
   for (let j = 1; j < 10; j++) {
     if (j in props.candidates) {
-      candidates.push(<span className={props.candidates[j]}>{j}</span>);
+      candidates.push(<span className={props.candidates[j] + " " + fontClass}>{j}</span>);
     }
   }
   return (
