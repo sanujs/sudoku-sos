@@ -23,6 +23,10 @@
   .elimination {
     background-color: lavenderblush;
   }
+
+  .old {
+    color: lightgray;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

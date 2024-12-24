@@ -373,7 +373,10 @@ const Sudoku = () => {
           ></StepList>
         </div>
       </div>
-      <Snackbar open={solvedAlert.visibility}>
+      <Snackbar
+        open={solvedAlert.visibility}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
         <Alert
           severity={solvedAlert.solved ? "success" : "error"}
           onClose={() => setSolvedAlert({ ...solvedAlert, visibility: false })}
