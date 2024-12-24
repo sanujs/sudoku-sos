@@ -64,7 +64,7 @@ footer {
 @media (prefers-color-scheme: dark) {
   :root {
     color: #ffffff;
-    background-color: #202020;
+    background-color: #111735;
   }
 }
 
