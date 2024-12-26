@@ -54,6 +54,7 @@ input.cell{
   font-size: 2.5rem;
   font-family: Arial, Helvetica, sans-serif;
   caret-color: transparent; /* Hides blinking cursor in cell*/
+  border-radius: 0;
 }
 
 input:focus.cell{
@@ -173,7 +174,6 @@ input:focus.cell{
 @media (max-width: 499px) {
   .sudoku-columns {
     grid-template-columns: 100%;
-    grid-template-rows: 70% 30%;
   }
 
   .puzzle-grid {
@@ -181,7 +181,7 @@ input:focus.cell{
   }
 
   .sidebar {
-    margin: 0;
+    margin: 16px 0;
   }
 
   input.cell {

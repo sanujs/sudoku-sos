@@ -47,7 +47,6 @@ const Cell = (props: CellProps) => {
         id={i.toString()}
         value={props.value}
         inputMode="numeric"
-        disabled={props.locked}
         readOnly={props.locked}
         onChange={(e) => props.onCellChange(i, e.target.value)}
         onKeyDown={(event) => {
