@@ -57,6 +57,10 @@ input.cell{
   border-radius: 0;
 }
 
+input:hover.cell {
+  cursor: pointer !important;
+}
+
 input:focus.cell{
   outline: none;
 }
@@ -158,6 +162,10 @@ input:focus.cell{
   grid-template-columns: 1fr 1fr 1fr;
   font-size: 0.8rem;
   text-align: center;
+}
+
+.candidates:hover {
+  cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -10,37 +10,37 @@ type StepListProps = {
 }
 const StepList = (props: StepListProps) => {
   return (
-    <div className="steplist">
-      <List
-        sx={{
-          maxHeight: 465,
-          overflow: 'auto',
-          padding: 0,
-        }}
-      >
-        {
-          props.solveOrder.map((step, index) => {
-            const stepType = "Solve" in step ? "solve" : "elimination";
-            const algorithm = "Solve" in step ? step.Solve.algorithm : step.Elimination.algorithm;
-            const color = props.solveOrderIndex && index < props.solveOrderIndex ? "old" : "new";
-            return <ListItem
-              key={index}
-              className={stepType + " " + color}
-              sx={{
-                padding: 0,
-                fontWeight: props.solveOrderIndex == index ? "bold" : "normal",
-              }}
+    <List
+      className="steplist"
+      sx={{
+        maxHeight: 465,
+        overflow: 'auto',
+        padding: 0,
+      }}
+    >
+      {
+        props.solveOrder.map((step, index) => {
+          const stepType = "Solve" in step ? "solve" : "elimination";
+          const algorithm = "Solve" in step ? step.Solve.algorithm : step.Elimination.algorithm;
+          const color = props.solveOrderIndex && index < props.solveOrderIndex ? "old" : "new";
+          return <ListItem
+            key={index}
+            className={stepType + " " + color}
+            sx={{
+              padding: 0,
+              fontWeight: props.solveOrderIndex == index ? "bold" : "normal",
+            }}
+          >
+            <ListItemButton
+              onClick={() => {props.onStepClick(index)}}
+              autoFocus={index==props.solveOrderIndex}
             >
-              <ListItemButton
-                onClick={() => {props.onStepClick(index)}}
-              >
-                {formatAlgorithmString(algorithm)}
-              </ListItemButton>
-            </ListItem>
-          })
-        }
-      </List>
-    </div>
+              {formatAlgorithmString(algorithm)}
+            </ListItemButton>
+          </ListItem>
+        })
+      }
+    </List>
   );
 };
 
