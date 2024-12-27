@@ -378,6 +378,7 @@ const Sudoku = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert
+          variant="filled"
           severity={solvedAlert.solved ? "success" : "error"}
           onClose={() => setSolvedAlert({ ...solvedAlert, visibility: false })}
         >

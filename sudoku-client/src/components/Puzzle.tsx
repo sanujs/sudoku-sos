@@ -17,7 +17,6 @@ const Puzzle = (props: PuzzleProps) => {
   function changeFocus(i: number) {
     if (cellRefs.current[i]?.current) {
       cellRefs.current[i].current?.focus();
-      props.setNewestHint([]);
     }
   }
 

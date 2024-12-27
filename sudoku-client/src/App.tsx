@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-      <header>
+      <header className='quicksand-title'>
         Sudoku SOS
       </header>
       <Sudoku/>

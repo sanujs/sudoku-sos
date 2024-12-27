@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Quicksand:wght@300..700&family=Sono:wght@200..800&display=swap');
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Nunito Sans", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -11,6 +12,34 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* || Fonts */
+
+.quicksand-title {
+  font-family: "Quicksand", serif;
+  font-optical-sizing: auto;
+  font-weight: 350; /* 300-700 */
+  font-style: normal;
+}
+
+.nunito-sans-controls {
+  font-family: "Nunito Sans", serif;
+  font-optical-sizing: auto;
+  font-weight: 200; /* 200-1000 */
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500;
+}
+
+.sono-number {
+  font-family: "Sono", serif;
+  font-optical-sizing: auto;
+  font-weight: 300; /* 200-800 */
+  font-style: normal;
+  font-variation-settings:
+    "MONO" 1;
 }
 
 /* || General Styles */
@@ -54,18 +83,9 @@ footer {
 
 /* || Theme/color-scheme specifics */
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #ffffff;
-    background-color: #202020;
-  }
+:root {
+  color: #ffffff;
+  background-color: #111735;
 }
 
 @media (max-width: 499px) {
