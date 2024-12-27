@@ -33,7 +33,6 @@ const StepList = (props: StepListProps) => {
           >
             <ListItemButton
               onClick={() => {props.onStepClick(index)}}
-              autoFocus={index==props.solveOrderIndex}
             >
               {formatAlgorithmString(algorithm)}
             </ListItemButton>
