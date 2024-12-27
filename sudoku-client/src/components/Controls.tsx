@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Checkbox, ButtonProps } from "@mui/material";
+import { Button, FormControlLabel, Checkbox, ButtonProps, Typography } from "@mui/material";
 import { CellState } from "./Sudoku";
 import { ChangeEvent } from "react";
 import { styled } from "@mui/material/styles";
@@ -24,8 +24,11 @@ const SubmitButton = styled(Button)<ButtonProps>(({ theme }) => ({
   fontFamily: "Nunito Sans",
 }));
 const DefaultButton = styled(Button)(() => ({
-  color: "white",
+  color: "lightgrey",
   fontFamily: "Nunito Sans",
+  '&:hover': {
+    backgroundColor: "#262c44",
+  }
 }));
 const Controls = (props: ControlsProps) => {
   return (
@@ -66,13 +69,24 @@ const Controls = (props: ControlsProps) => {
         </SubmitButton>
       </div>
       <FormControlLabel
+        sx={{
+          typography: {
+            fontFamily: "Nunito Sans",
+          }
+        }}
         control={
           <Checkbox
+            sx={{
+              color: "#4c587d",
+              '&.Mui-checked': {
+                color: "lightgrey",
+              },
+            }}
             checked={props.showCandidates}
             onChange={props.handleCandidateCheckbox}
           />
         }
-        label="Generate candidates"
+        label={<Typography sx={{fontFamily: "Nunito Sans"}}>Generate candidates</Typography>}
       />
     </div>
   );

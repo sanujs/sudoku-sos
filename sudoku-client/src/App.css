@@ -16,11 +16,11 @@
 /* || StepList */
 
 .solve {
-  background-color: rgb(2, 38, 70);
+  background-color: #262c44;
 }
 
 .elimination {
-  background-color: rgb(85, 3, 20);
+  background-color: #570000;
 }
 
 .new {
@@ -90,12 +90,12 @@ input:focus.cell{
 }
 
 .error  {
-  background-color: rgb(87, 0, 0);
+  background-color: #570000;
   color: #fdd;
 }
 
 .next {
-  background-color:rgb(92, 75, 32);
+  background-color:#5c4b20;
 }
 
 /* || Candidates */
