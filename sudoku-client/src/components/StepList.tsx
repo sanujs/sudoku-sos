@@ -16,6 +16,7 @@ const StepList = (props: StepListProps) => {
         maxHeight: 465,
         overflow: 'auto',
         padding: 0,
+        scrollbarWidth: 'thin',
       }}
     >
       {
