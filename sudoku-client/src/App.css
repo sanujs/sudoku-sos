@@ -81,7 +81,7 @@ input:focus.cell{
 
 @media (prefers-color-scheme: dark) {
   input {
-    background-color: #262c44;
+    background-color: #1e2540;
     color: white;
   }
 
