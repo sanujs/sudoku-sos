@@ -23,18 +23,22 @@ const SubmitButton = styled(Button)<ButtonProps>(({ theme }) => ({
   },
   fontFamily: "Nunito Sans",
 }));
+const DefaultButton = styled(Button)(() => ({
+  color: "white",
+  fontFamily: "Nunito Sans",
+}));
 const Controls = (props: ControlsProps) => {
   return (
     <div className="controls">
       <div className="buttons">
-        <Button
+        <DefaultButton
           onClick={props.exampleSudoku}
           disabled={props.submitState}
           className={"nunito-sans-controls"}
         >
           Example
-        </Button>
-        <Button
+        </DefaultButton>
+        <DefaultButton
           className="nunito-sans-controls"
           disabled={!props.submitState}
           onClick={() => {
@@ -48,8 +52,8 @@ const Controls = (props: ControlsProps) => {
           }}
         >
           Next
-        </Button>
-        <Button onClick={props.reset}>Reset</Button>
+        </DefaultButton>
+        <DefaultButton onClick={props.reset}>Reset</DefaultButton>
         <SubmitButton
           className="nunito-sans-controls"
           variant="contained"
