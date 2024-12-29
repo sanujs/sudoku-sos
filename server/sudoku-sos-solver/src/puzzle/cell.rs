@@ -19,10 +19,11 @@ pub struct Elimination {
     pub algorithm: EliminationAlgorithm,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub enum EliminationAlgorithm {
     FilledCell,
     NakedSet,
+    HiddenSet,
 }
 
 impl Cell {

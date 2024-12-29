@@ -49,7 +49,7 @@ pub fn solve_puzzle(grid: [[u8; 9]; 9]) -> Result<SolveOutput, SolveOutput> {
         if tmp_elim > 0 || tmp_fill > 0 {
             continue;
         }
-        tmp_elim = naked_set(&mut puzzle);
+        tmp_elim = naked_and_hidden_set(&mut puzzle);
         println!("NAKED SET");
         println!("Eliminated: {}", tmp_elim);
         println!("{:?}", puzzle);
@@ -144,7 +144,7 @@ fn sole_candidate(puzzle: &mut Puzzle) -> (u32, u32) {
 // Eliminating Algorithms
 // ==================
 
-fn naked_set(puzzle: &mut Puzzle) -> u32 {
+fn naked_and_hidden_set(puzzle: &mut Puzzle) -> u32 {
     let mut removed = 0;
     let mut cell: (usize, usize) = (0, 0);
     for _ in 0..9 {
@@ -184,8 +184,14 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                         continue;
                     }
                     if value.len() == key.len() {
-                        // Naked Subset exists
-                        let mut victims: Vec<(usize, usize)> = vec![];
+                        // Naked Set exists
+                        let victims: Vec<(usize, usize)> = house_cells.iter().filter(|(row,col, _)| !value.contains(&(*row, *col))).map(|(row, col, _)| (*row, *col)).collect();
+                        // Use the algorithm of the smaller between a naked set and it's inverse hidden set
+                        let (algorithm, eliminators) = if house_cells.len() - key.len() < key.len() {
+                            (EliminationAlgorithm::HiddenSet, victims.clone())
+                        } else {
+                            (EliminationAlgorithm::NakedSet, value.clone())
+                        };
                         // Candidates can be removed from remaining cells in the house
                         for (row, col, candidate_set) in house_cells.iter() {
                             if !candidate_set.is_subset(key) {
@@ -194,24 +200,23 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                                     if puzzle.grid[*row][*col]
                                         .eliminate_candidate(Elimination {
                                             value: *c as u8,
-                                            eliminators: (*value.clone()).to_vec(),
+                                            eliminators: eliminators.clone(),
                                             steps_index: puzzle.steps.len() + 1,
-                                            algorithm: EliminationAlgorithm::NakedSet,
+                                            algorithm: algorithm.clone(),
                                         })
                                         .is_some()
                                     {
                                         removed += 1;
-                                        if !victims.contains(&(*row, *col)) { victims.push((*row, *col)) };
                                     }
                                 }
                             }
                         }
-                        if victims.len() > 0 {
+                        if removed > 0 {
                             // complex algorithm needs to be pushed to puzzle's solve order
                             puzzle.steps.push(Step::Elimination {
                                 value: key.into_iter().map(|c| *c).collect(),
-                                algorithm: EliminationAlgorithm::NakedSet,
-                                eliminators: (*value.clone()).to_vec(),
+                                algorithm: algorithm,
+                                eliminators: eliminators,
                                 victims,
                                 steps_index: puzzle.steps.len() + 1,
                             });
@@ -221,10 +226,7 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
                 }
             }
         }
-        if removed > 0 {
-            return removed;
-        }
-        // Method to have each iteration use a cell in a unique row, column, and box
+        // Ensures next cell is in a different row, column, and box
         cell = if cell.1 > 4 {
             (cell.0 + 1, cell.1 - 5)
         } else {
