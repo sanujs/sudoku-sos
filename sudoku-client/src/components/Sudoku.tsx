@@ -82,10 +82,9 @@ const Sudoku = () => {
   const [solveOrder, setSolveOrder] = useState<Step[]>([]);
   const [solveOrderIndex, setSolveOrderIndex] = useState<number | null>(null);
   const [showCandidates, setShowCandidates] = useState(true);
-  const [resubmit, setResubmit] = useState(false);
   const [newestHintss, setNewestHint] = useState<number[]>([]);
 
-  const handleSubmit = async (): Promise<CellState[]> => {
+  const handleSubmit = () => {
     const grid: number[][] = [...new Array(9)].map(() => Array(9));
     for (let i = 0; i < 81; i++) {
       grid[Math.floor(i / 9)][i % 9] =
@@ -93,7 +92,7 @@ const Sudoku = () => {
     }
 
     console.log("Grid request", grid);
-    return await axios.post("https://api.sudokusos.com", grid).then((response) => {
+    axios.post("https://api.sudokusos.com", grid).then((response) => {
       console.log(response);
       const data: ResponseData = response.data;
       if (data.solved) {
@@ -111,19 +110,18 @@ const Sudoku = () => {
       }
       setSolveOrder(data.steps);
       setSolveOrderIndex(-1);
-      const newGS = gridState.map((item, i) => {
+      const newGS = gridState.map((_, i) => {
         const responseItem = data.grid[Math.floor(i / 9)][i % 9];
         return {
-          ...item,
+          sudokuState: gridState[i].sudokuState,
           solvedValue: !responseItem.value ? "" : responseItem.value,
           eliminations: responseItem.eliminations,
           locked: true,
           steps_index: responseItem.steps_index,
         };
       });
+      setGridState(newGS);
       setSubmitState(true);
-      setResubmit(false);
-      return newGS;
     });
   };
 
@@ -184,7 +182,6 @@ const Sudoku = () => {
       sudokuState: newVal,
     };
     setGridState(newGridState);
-    setResubmit(true);
     setNewestHint([]);
   }
 
@@ -295,16 +292,6 @@ const Sudoku = () => {
   async function handleCandidateCheckbox(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
-    if (e.target.checked) {
-      setShowCandidates(true);
-      if (resubmit) {
-        setGridState(
-          await handleSubmit().then((newGS) => {
-            return newGS;
-          })
-        );
-      }
-    }
     setShowCandidates(e.target.checked);
   }
 
@@ -325,15 +312,17 @@ const Sudoku = () => {
   }
 
   function exampleSudoku() {
-    const example1 =
-      "000000600000036010300010507670004001003060008102000456064080100001007900500000760";
-    // "215608430060001200000000001506300104901000300300162500700010040100006000602405713";
+    const examples = [
+      "000000600000036010300010507670004001003060008102000456064080100001007900500000760",
+      "300000000970010000600583000200000900500621003008000005000435002000090056000000001",
+    ]
+    const example = examples[Math.floor(Math.random()*examples.length)];
     reset();
     setGridState(
       gridState.map((item, index) => {
         return {
           ...item,
-          sudokuState: example1[index] === "0" ? "" : example1[index],
+          sudokuState: example[index] === "0" || example[index] === "." ? "" : example[index],
         };
       })
     );
@@ -359,7 +348,6 @@ const Sudoku = () => {
             nextHint={nextHint}
             gridState={gridState}
             setGridState={setGridState}
-            resubmit={resubmit}
             reset={reset}
             exampleSudoku={exampleSudoku}
             showCandidates={showCandidates}
