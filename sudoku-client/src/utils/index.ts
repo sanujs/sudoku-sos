@@ -10,6 +10,8 @@ export const formatAlgorithmString = (algorithm: string): string => {
             return "Unique Column";
         case "NakedSet":
             return "Naked Set";
+        case "HiddenSet":
+            return "Hidden Set";
         default:
             return algorithm;
     }
