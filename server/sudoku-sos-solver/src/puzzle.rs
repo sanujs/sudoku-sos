@@ -14,7 +14,7 @@ pub struct Puzzle {
     pub empty_count: u32,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub enum Step {
     Elimination {
         value: Vec<u8>,
@@ -31,7 +31,7 @@ pub enum Step {
     },
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub enum SolveAlgorithm {
     SoleCandidate,
     UniqueRow,

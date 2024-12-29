@@ -49,7 +49,7 @@ pub fn solve_puzzle(grid: [[u8; 9]; 9]) -> Result<SolveOutput, SolveOutput> {
         if tmp_elim > 0 || tmp_fill > 0 {
             continue;
         }
-        tmp_elim = naked_set(&mut puzzle);
+        tmp_elim = naked_and_hidden_set(&mut puzzle);
         println!("NAKED SET");
         println!("Eliminated: {}", tmp_elim);
         println!("{:?}", puzzle);
@@ -144,7 +144,7 @@ fn sole_candidate(puzzle: &mut Puzzle) -> (u32, u32) {
 // Eliminating Algorithms
 // ==================
 
-fn naked_set(puzzle: &mut Puzzle) -> u32 {
+fn naked_and_hidden_set(puzzle: &mut Puzzle) -> u32 {
     let mut removed = 0;
     let mut cell: (usize, usize) = (0, 0);
     for _ in 0..9 {
@@ -152,16 +152,16 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
 
         for house in houses.iter() {
             let mut state: BTreeMap<BTreeSet<u8>, Vec<(usize, usize)>> = BTreeMap::new();
-            // Creates an iterable cell's row, column, and candidates
-            let house_iter: Vec<(usize, usize, BTreeSet<u8>)> =
+            // Vector of a house's unfilled cells (row, column, candidates)
+            let house_cells: Vec<(usize, usize, BTreeSet<u8>)> =
                 puzzle.get_house_indices_with_candidates(cell.0, cell.1, vec![house]);
-            for (row, col, set) in house_iter.iter() {
-                // Maps every union of every set of candidates -> cells with a set of candidates that is a subset of the key
+            for (row, col, candidate_set) in house_cells.iter() {
                 let mut next_state = state.clone();
-                next_state.entry(set.clone()).or_insert(vec![(*row, *col)]);
+                next_state.entry(candidate_set.clone()).or_insert(vec![(*row, *col)]);
 
                 for key in state.keys() {
-                    let new_key: BTreeSet<u8> = set.union(key).copied().collect();
+                    // Maps every union of every set of candidates -> cells with a set of candidates that is a subset of the key
+                    let new_key: BTreeSet<u8> = candidate_set.union(key).copied().collect();
                     if state.contains_key(&new_key) {
                         if !next_state.get(&new_key).unwrap().contains(&(*row, *col)) {
                             next_state.get_mut(&new_key).unwrap().push((*row, *col));
@@ -179,51 +179,54 @@ fn naked_set(puzzle: &mut Puzzle) -> u32 {
 
             for key in state.keys() {
                 if let Some(value) = state.get(key) {
-                    if value.len() > house_iter.len() {
-                        // Number of candidates is greater than the number of unfilled cells in the house
+                    if value.len() >= house_cells.len() {
+                        // Number of candidates is greater than or equal to the number of unfilled cells in the house
                         continue;
                     }
                     if value.len() == key.len() {
-                        // Naked Subset exists
-                        let mut victims: Vec<(usize, usize)> = vec![];
+                        // Naked Set exists
+                        let victims: Vec<(usize, usize)> = house_cells.iter().filter(|(row,col, _)| !value.contains(&(*row, *col))).map(|(row, col, _)| (*row, *col)).collect();
+                        // Use the algorithm of the smaller between a naked set and it's inverse hidden set
+                        let (algorithm, eliminators) = if house_cells.len() - key.len() < key.len() {
+                            (EliminationAlgorithm::HiddenSet, victims.clone())
+                        } else {
+                            (EliminationAlgorithm::NakedSet, value.clone())
+                        };
                         // Candidates can be removed from remaining cells in the house
-                        for (row, col, set) in house_iter.iter() {
-                            if !set.is_subset(key) {
-                                let remove_candidates = set.intersection(key);
+                        for (row, col, candidate_set) in house_cells.iter() {
+                            if !candidate_set.is_subset(key) {
+                                let remove_candidates = candidate_set.intersection(key);
                                 for c in remove_candidates {
                                     if puzzle.grid[*row][*col]
                                         .eliminate_candidate(Elimination {
                                             value: *c as u8,
-                                            eliminators: (*value.clone()).to_vec(),
+                                            eliminators: eliminators.clone(),
                                             steps_index: puzzle.steps.len() + 1,
-                                            algorithm: EliminationAlgorithm::NakedSet,
+                                            algorithm: algorithm.clone(),
                                         })
                                         .is_some()
                                     {
                                         removed += 1;
-                                        if !victims.contains(&(*row, *col)) { victims.push((*row, *col)) };
                                     }
                                 }
                             }
                         }
-                        if victims.len() > 0 {
+                        if removed > 0 {
                             // complex algorithm needs to be pushed to puzzle's solve order
                             puzzle.steps.push(Step::Elimination {
                                 value: key.into_iter().map(|c| *c).collect(),
-                                algorithm: EliminationAlgorithm::NakedSet,
-                                eliminators: (*value.clone()).to_vec(),
+                                algorithm: algorithm,
+                                eliminators: eliminators,
                                 victims,
                                 steps_index: puzzle.steps.len() + 1,
-                            })
+                            });
+                            return removed;
                         }
                     }
                 }
             }
         }
-        if removed > 0 {
-            return removed;
-        }
-        // Method to have each iteration use a cell in a unique row, column, and box
+        // Ensures next cell is in a different row, column, and box
         cell = if cell.1 > 4 {
             (cell.0 + 1, cell.1 - 5)
         } else {
