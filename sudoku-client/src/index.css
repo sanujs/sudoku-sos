@@ -5,8 +5,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: only dark;
+  color: #ffffff;
+  background-color: #111735;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -73,20 +74,17 @@ header {
 }
 
 footer {
+  display: flex;
   min-height: 50px;
   bottom: 0;
-  padding: 20px 24px;
+  padding: 15px 24px;
   margin: 0 25px;
   font-size: small;
   font-weight: 100;
+  align-items: center;
 }
 
-/* || Theme/color-scheme specifics */
-
-:root {
-  color: #ffffff;
-  background-color: #111735;
-}
+/* || Mobile-specific CSS */
 
 @media (max-width: 499px) {
   #root {

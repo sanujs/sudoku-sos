@@ -1,5 +1,6 @@
 import './App.css'
 import Sudoku from './components/Sudoku'
+import githubMarkWhite from './assets/githubMarkWhite.png'
 
 function App() {
 
@@ -10,7 +11,14 @@ function App() {
       </header>
       <Sudoku/>
       <footer>
-        <a href='https://github.com/sanujs/sudoku-sos'>GitHub</a>
+        <a href='https://github.com/sanujs/sudoku-sos'>
+          <img
+            src={githubMarkWhite}
+            alt='GitHub Repository'
+            width='20'
+            height='20'
+          />
+        </a>
       </footer>
     </>
   )
