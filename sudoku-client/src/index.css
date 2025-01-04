@@ -82,6 +82,7 @@ footer {
   font-size: small;
   font-weight: 100;
   align-items: center;
+  justify-content: center;
 }
 
 /* || Mobile-specific CSS */

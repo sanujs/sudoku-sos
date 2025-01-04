@@ -5,9 +5,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Puzzle from "./Puzzle";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import StepList from "./StepList";
 import Controls from "./Controls";
+import { isSameHouse, twoToOneIndex } from "../utils";
 
 type ResponseData = {
   solved: boolean;
@@ -91,9 +92,7 @@ const Sudoku = () => {
         gridState[i].sudokuState === "" ? 0 : Number(gridState[i].sudokuState);
     }
 
-    console.log("Grid request", grid);
     axios.post("https://api.sudokusos.com", grid).then((response) => {
-      console.log(response);
       const data: ResponseData = response.data;
       if (data.solved) {
         setSolvedAlert({
@@ -125,22 +124,13 @@ const Sudoku = () => {
     });
   };
 
-  useEffect(() => {
-    console.log("Gridstate", gridState);
-  }, [gridState]);
-
-  // Converts [row, column] index format to single value between 0-81
-  const twoToOneIndex = (arr: number[]): number => {
-    return arr[0] * 9 + arr[1];
-  };
-
   function isErroredCell(i: number): boolean {
     const value = gridState[i].sudokuState;
     if (!value) {
       return false;
     }
     for (let j = 0; j < 81; j++) {
-      if (i !== j && sameHouse(i, j) && value === gridState[j].sudokuState) {
+      if (i !== j && isSameHouse(i, j) && value === gridState[j].sudokuState) {
         return true;
       }
     }
@@ -151,7 +141,7 @@ const Sudoku = () => {
     // Update candidates
     const newGridState = [...gridState];
     for (let j = 0; j < 81; j++) {
-      if (i !== j && sameHouse(i, j)) {
+      if (i !== j && isSameHouse(i, j)) {
         // Re-introduce candidates
         for (const elim in newGridState[j].eliminations) {
           if (
@@ -189,26 +179,6 @@ const Sudoku = () => {
     onCellChange(i, "");
   }
 
-  function sameHouse(a: number, b: number) {
-    // Same row
-    if (Math.floor(a / 9) * 9 === Math.floor(b / 9) * 9) {
-      return true;
-    }
-
-    // Same column
-    if (a % 9 === b % 9) {
-      return true;
-    }
-
-    // Same box
-    if (
-      Math.floor(a / 27) === Math.floor(b / 27) &&
-      Math.floor((a % 9) / 3) === Math.floor((b % 9) / 3)
-    ) {
-      return true;
-    }
-    return false;
-  }
 
   function onStepClick(newSolveOrderIndex: number) {
     const orderedElement: Step = solveOrder[newSolveOrderIndex];
@@ -233,7 +203,6 @@ const Sudoku = () => {
   }
 
   function nextHint(oldGS: CellState[]): CellState[] {
-    console.log("index", solveOrderIndex);
     if (
       solveOrderIndex != null &&
       solveOrderIndex >= -1 &&
@@ -322,7 +291,7 @@ const Sudoku = () => {
       gridState.map((item, index) => {
         return {
           ...item,
-          sudokuState: example[index] === "0" || example[index] === "." ? "" : example[index],
+          sudokuState: !/[1-9]/.test(example[index]) ? "" : example[index],
         };
       })
     );
