@@ -1,6 +1,5 @@
-import { Button, FormControlLabel, Checkbox, ButtonProps, Typography } from "@mui/material";
+import { Button, ButtonProps } from "@mui/material";
 import { CellState } from "./Sudoku";
-import { ChangeEvent } from "react";
 import { styled } from "@mui/material/styles";
 
 type ControlsProps = {
@@ -11,8 +10,6 @@ type ControlsProps = {
   setGridState: React.Dispatch<React.SetStateAction<CellState[]>>;
   reset: () => void;
   exampleSudoku: () => void;
-  showCandidates: boolean;
-  handleCandidateCheckbox: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 };
 const SubmitButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: theme.palette.getContrastText("#262c44"),
@@ -56,26 +53,6 @@ const Controls = (props: ControlsProps) => {
           Submit
         </SubmitButton>
       </div>
-      <FormControlLabel
-        sx={{
-          typography: {
-            fontFamily: "Nunito Sans",
-          }
-        }}
-        control={
-          <Checkbox
-            sx={{
-              color: "#4c587d",
-              '&.Mui-checked': {
-                color: "lightgrey",
-              },
-            }}
-            checked={props.showCandidates}
-            onChange={props.handleCandidateCheckbox}
-          />
-        }
-        label={<Typography sx={{fontFamily: "Nunito Sans"}}>Generate candidates</Typography>}
-      />
     </div>
   );
 };

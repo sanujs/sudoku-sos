@@ -82,7 +82,6 @@ const Sudoku = () => {
   });
   const [solveOrder, setSolveOrder] = useState<Step[]>([]);
   const [solveOrderIndex, setSolveOrderIndex] = useState<number | null>(null);
-  const [showCandidates, setShowCandidates] = useState(true);
   const [newestHintss, setNewestHint] = useState<number[]>([]);
 
   const handleSubmit = () => {
@@ -236,8 +235,7 @@ const Sudoku = () => {
     const candidatesObj: string[] = [];
     if (
       solveOrderIndex === null ||
-      gridState[i].sudokuState ||
-      !showCandidates
+      gridState[i].sudokuState
     ) {
       return candidatesObj;
     }
@@ -256,12 +254,6 @@ const Sudoku = () => {
     }
 
     return candidatesObj;
-  }
-
-  async function handleCandidateCheckbox(
-    e: React.ChangeEvent<HTMLInputElement>
-  ) {
-    setShowCandidates(e.target.checked);
   }
 
   function reset() {
@@ -319,8 +311,6 @@ const Sudoku = () => {
             setGridState={setGridState}
             reset={reset}
             exampleSudoku={exampleSudoku}
-            showCandidates={showCandidates}
-            handleCandidateCheckbox={handleCandidateCheckbox}
           ></Controls>
           <StepList
             solveOrder={solveOrder}
