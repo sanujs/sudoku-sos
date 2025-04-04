@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Welcome to Sudoku SOS",
+    "text": "This tool is made to solve any Sudoku while showing you every step. Just type in your incomplete Sudoku puzzle in the empty grid and hit Submit!",
+    "image": ""
+  },
+  {
+    "title": "Step 1: Input your Sudoku",
+    "text": "The first step is to input an unfinished Sudoku into the empty grid. If you don't have one, just hit Example. Otherwise, you can click on any cell to highlight it and type in a number to fill that cell. When you fill a cell, the next cell is automatically highlighted to make filling the Sudoku easier and quicker. Typing 0, Space, or Tab will skip that cell. You can also navigate with the arrow keys. If the Sudoku is not valid, the conflicting cells will highlight red. Once you have finished inputting your Sudoku, you can hit Submit to get your Sudoku solved!",
+    "image": ""
+  },
+  {
+    "title": "Step 2: Understanding the solution",
+    "text": "Once you submit an unfinished puzzle, a few things change. First, a snackbar appears in the bottom right letting you know if we were able to find a solution. If we were unable to solve the Sudoku, it means the puzzle is too difficult for us or unsolvable. If a solution is found, you will notice little numbers appear in the unfilled cells. These are the cell Candidates, essentially showing every possible value for each empty cell at the current step. As we go through the steps and fill in the cells, you will see these candidates get crossed out. On the right (or at the bottom if you are on mobile), you will see the solving steps. Each of them are color coded blue or red to indicate the type of step and labelled with the algorithm used. You can iterate through the steps by hitting the Next button, or you can jump to any step by clicking on it.",
+    "image": ""
+  }
+]

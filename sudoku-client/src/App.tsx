@@ -1,15 +1,38 @@
 import './App.css'
 import Sudoku from './components/Sudoku'
 import githubMarkWhite from './assets/githubMarkWhite.png'
+import { Backdrop } from '@mui/material'
+import { useState } from 'react'
+import Tutorial from './components/Tutorial'
 
 function App() {
+  const [tutorial, setTutorial] = useState(false);
+
+  function onHelpClick() {
+    setTutorial(true);
+  }
+
+  function closeTutorial() {
+    setTutorial(false);
+  }
 
   return (
     <>
       <header className='quicksand-title'>
         Sudoku SOS
       </header>
-      <Sudoku/>
+      <Sudoku
+        onHelpClick={onHelpClick}
+      />
+      <Backdrop
+        sx={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
+        open={tutorial}
+        // onClick={() => setTutorial(false)}
+      >
+        <Tutorial
+          closeTutorial={closeTutorial}
+        />
+      </Backdrop>
       <footer>
         <a href='https://github.com/sanujs/sudoku-sos'>
           <img

@@ -65,7 +65,12 @@ export type CellState = {
   steps_index: number;
 };
 
-const Sudoku = () => {
+
+type SudokuProps = {
+  onHelpClick: () => void;
+}
+
+const Sudoku = (props: SudokuProps) => {
   const [gridState, setGridState] = useState<CellState[]>(
     Array(81).fill({
       sudokuState: "",
@@ -311,6 +316,7 @@ const Sudoku = () => {
             setGridState={setGridState}
             reset={reset}
             exampleSudoku={exampleSudoku}
+            onHelpClick={props.onHelpClick}
           ></Controls>
           <StepList
             solveOrder={solveOrder}
