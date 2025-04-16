@@ -1,5 +1,3 @@
-import { useState } from "react";
-import tutorialContent from "../assets/tutorialContent.json";
 import { Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Card from "@mui/material/Card";
@@ -9,42 +7,43 @@ type TutorialProps = {
   closeTutorial: () => void;
 };
 const Tutorial = (props: TutorialProps) => {
-  const [pageIndex, setPageIndex] = useState(0);
-  const { title, text, image } = tutorialContent[pageIndex];
-
   return (
     <Card
       variant="outlined"
       sx={{
         width: "80vw",
         maxWidth: "600px",
+        position: "relative",
       }}
     >
       <CardContent>
-        <h2>{title}</h2>
-        <p>{text}</p>
-        {image != "" ? <img src={image} alt={title} /> : null}
         <div>
           <Button
-            onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
-            disabled={pageIndex === 0}
+            onClick={props.closeTutorial}
+            sx={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              color: "black",
+            }}
           >
-            Previous
-          </Button>
-          <Button
-            onClick={() =>
-              setPageIndex((prev) =>
-                Math.min(prev + 1, tutorialContent.length - 1)
-              )
-            }
-            disabled={pageIndex === tutorialContent.length - 1}
-          >
-            Next
-          </Button>
-          <Button onClick={props.closeTutorial}>
             <CloseIcon />
           </Button>
         </div>
+        <h2>Welcome to Sudoku SOS</h2>
+        <p>
+          This tool is made to help you solve any Sudoku and show you every
+          step!
+        </p>
+        <ol>
+          <li>Input your Sudoku (or use one of our examples).</li>
+          <li>Click 'Submit'.</li>
+          <li>
+            Click 'Next' to iterate through solving steps, or click any step to
+            jump to that step.
+          </li>
+          <li>Click 'Reset' to solve another Sudoku!</li>
+        </ol>
       </CardContent>
     </Card>
   );
