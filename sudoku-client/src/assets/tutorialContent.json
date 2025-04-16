@@ -6,7 +6,7 @@
   },
   {
     "title": "Step 1: Input your Sudoku",
-    "text": "The first step is to input an unfinished Sudoku into the empty grid. If you don't have one, just hit Example. Otherwise, you can click on any cell to highlight it and type in a number to fill that cell. When you fill a cell, the next cell is automatically highlighted to make filling the Sudoku easier and quicker. Typing 0, Space, or Tab will skip that cell. You can also navigate with the arrow keys. If the Sudoku is not valid, the conflicting cells will highlight red. Once you have finished inputting your Sudoku, you can hit Submit to get your Sudoku solved!",
+    "text": "The first step is to input an unfinished Sudoku into the empty grid. If you don't have one, just click 'Example'. Otherwise, you can click on any cell to highlight it and type in a number to fill that cell. When you fill a cell, the next cell is automatically highlighted to make filling the Sudoku easier and quicker. Typing 0, Space, or Tab will skip that cell. You can also navigate with the arrow keys. If the Sudoku is not valid, the conflicting cells will highlight red. Once you have finished inputting your Sudoku, you can hit Submit to get your Sudoku solved!",
     "image": ""
   },
   {

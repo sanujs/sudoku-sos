@@ -1,9 +1,9 @@
-import './App.css'
-import Sudoku from './components/Sudoku'
-import githubMarkWhite from './assets/githubMarkWhite.png'
-import { Backdrop } from '@mui/material'
-import { useState } from 'react'
-import Tutorial from './components/Tutorial'
+import "./App.css";
+import Sudoku from "./components/Sudoku";
+import githubMarkWhite from "./assets/githubMarkWhite.png";
+import { Backdrop } from "@mui/material";
+import { useState } from "react";
+import Tutorial from "./components/Tutorial";
 
 function App() {
   const [tutorial, setTutorial] = useState(false);
@@ -18,33 +18,23 @@ function App() {
 
   return (
     <>
-      <header className='quicksand-title'>
-        Sudoku SOS
-      </header>
-      <Sudoku
-        onHelpClick={onHelpClick}
-      />
-      <Backdrop
-        sx={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
-        open={tutorial}
-        // onClick={() => setTutorial(false)}
-      >
-        <Tutorial
-          closeTutorial={closeTutorial}
-        />
+      <header className="quicksand-title">Sudoku SOS</header>
+      <Sudoku onHelpClick={onHelpClick} />
+      <Backdrop open={tutorial}>
+        <Tutorial closeTutorial={closeTutorial} />
       </Backdrop>
       <footer>
-        <a href='https://github.com/sanujs/sudoku-sos'>
+        <a href="https://github.com/sanujs/sudoku-sos">
           <img
             src={githubMarkWhite}
-            alt='GitHub Repository'
-            width='20'
-            height='20'
+            alt="GitHub Repository"
+            width="20"
+            height="20"
           />
         </a>
       </footer>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
