@@ -10,6 +10,7 @@ type ControlsProps = {
   setGridState: React.Dispatch<React.SetStateAction<CellState[]>>;
   reset: () => void;
   exampleSudoku: () => void;
+  onHelpClick: () => void;
 };
 const SubmitButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: theme.palette.getContrastText("#262c44"),
@@ -24,7 +25,9 @@ const DefaultButton = styled(Button)(() => ({
   fontFamily: "Nunito Sans",
   '&:hover': {
     backgroundColor: "#262c44",
-  }
+    borderColor: "lightgrey",
+  },
+  borderColor: "lightgrey",
 }));
 const Controls = (props: ControlsProps) => {
   return (
@@ -52,6 +55,9 @@ const Controls = (props: ControlsProps) => {
         >
           Submit
         </SubmitButton>
+        <DefaultButton onClick={props.onHelpClick}>
+          Help
+        </DefaultButton>
       </div>
     </div>
   );
